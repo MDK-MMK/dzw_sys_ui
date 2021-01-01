@@ -48,33 +48,13 @@
                 @click="update(scope.row)"
                 >编辑</el-button
               >
-
-              <el-popover placement="top" width="160" v-model="visible">
-                <p>确定删除吗？</p>
-                <div style="text-align: right; margin: 0">
-                  <el-button size="mini" type="text" @click="visible = false"
-                    >取消</el-button
-                  >
-                  <el-button type="primary" size="mini" @click="visible = false,del(scope.row.sid)"
-                    >确定</el-button
-                  >
-                </div>
-                <el-button
-                slot="reference"
+              <el-button
                 type="danger"
                 icon="el-icon-delete"
                 round
+                @click="del(scope.row)"
                 >移除</el-button
               >
-              </el-popover>
-
-              <!-- <el-button
-                type="danger"
-                icon="el-icon-delete"
-                round
-                @click="delete scope.row.sid"
-                >移除</el-button
-              > -->
             </template>
           </el-table-column>
         </el-table>
@@ -147,7 +127,7 @@ export default {
     var validatexmoney = (rule, value, callback) => {
       const age = /^[0-9]*$/;
       if (value === "") {
-        callback(new Error("请输入星级名称！"));
+        callback(new Error("请输入维修金额！"));
       } else {
         if (!age.test(value)) {
           callback(new Error("金额只能是数字！"));
@@ -157,7 +137,7 @@ export default {
       }
     };
     return {
-        visible:false,
+      visible: false,
       fullscreenLoading: false,
       Starsa: { starts: "", sid: 0, xmoney: "" },
       dialogVisible: false,
@@ -222,7 +202,8 @@ export default {
           this.fullscreenLoading = true;
           const axios = require("axios");
           let that = this;
-          axios
+          if(this.Starsa.sid===0){
+            axios
             .post(
               "http://localhost:8080/dzw_sys/api/Starss/insert",
               this.Starsa
@@ -243,25 +224,60 @@ export default {
                 that.$message.error("添加失败!");
               }
             });
-        } else {
-          // console.log("error submit!!");
 
+          }else{
+            axios
+            .put(
+              "http://localhost:8080/dzw_sys/api/Starss/update",
+              this.Starsa
+            )
+            .then(function (res) {
+              that.fullscreenLoading = false;
+              //console.log(res.data);
+              if (res.data == 1) {
+                that.$message({
+                  message: "修改成功",
+                  type: "success",
+                });
+                that.dialogVisible = false;
+                that.Starsa.starts = "";
+                that.Starsa.xmoney = "";
+                that.Starsa.sid =0;
+                that.selectAll(that.size, that.currentPage);
+              } else {
+                that.$message.error("修改失败!");
+              }
+            });
+
+
+
+          }
+
+        } else {
           return false;
         }
       });
     },
     //重置
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      let that=this;
+      if (this.Starsa.sid !== 0) {
+        that.Starsa.starts = "";
+        that.Starsa.xmoney = "";
+      }else{
+         this.$refs[formName].resetFields();
+      }
     },
     //删除
-    del(sid) {
+    del(row) {
       this.fullscreenLoading = true;
       const axios = require("axios");
       let that = this;
+      //console.log(row);
       axios
-        .delete("http://localhost:8080/dzw_sys/api/Starss/delete", sid)
-        .then(function () {
+        .delete("http://localhost:8080/dzw_sys/api/Starss/delete/" + row.sid)
+        .then(function (res) {
+          console.log(res.data);
           that.fullscreenLoading = false;
           if (res.data == 1) {
             that.$message({
@@ -273,6 +289,13 @@ export default {
             that.$message.error("添加失败!");
           }
         });
+    },
+
+    update(row) {
+      this.dialogVisible = true;
+      this.Starsa.starts = row.starts;
+      this.Starsa.xmoney = row.xmoney;
+      this.Starsa.sid = row.sid;
     },
   },
 };
