@@ -4,6 +4,7 @@ import login from '../views/Login.vue'
 import register from '../views/Register.vue'
 import home from '../views/Home.vue'
 import stars from '../views/yyt/Stars'
+import team from '../views/yyt/Team.vue'
 
 Vue.use(Router)
 
@@ -15,6 +16,8 @@ export default new Router({
     {path: '/home',name: 'home',component: home,children:[
        //技工星级
       {path: '/stars',name: 'stars',component: stars},
+        //技工班组
+      {path: '/team',name: 'team',component: team},
     ]},
     //注册
     {path: '/register',name: 'register',component: register},
