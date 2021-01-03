@@ -6,7 +6,7 @@
           <el-col :xs="8" :sm="6" :md="4" :lg="20" :xl="1">
             <el-input
               type="text"
-              placeholder="请输入星级名称"
+              placeholder="请输入职位名称"
               v-model="Stars.starts"
               class="input-shous"
             >
