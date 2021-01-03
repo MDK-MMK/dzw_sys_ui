@@ -6,6 +6,8 @@ import home from '../views/Home.vue'
 import stars from '../views/yyt/Stars'
 import zhiwei from '../views/ljh/ZhiWei.vue'
 
+import team from '../views/yyt/Team.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -18,6 +20,8 @@ export default new Router({
       {path: '/stars',name: 'stars',component: stars},
        //岗位定义
        {path: '/zhiwei',name: 'zhiwei',component: zhiwei},
+        //技工班组
+      {path: '/team',name: 'team',component: team},
     ]},
     //注册
     {path: '/register',name: 'register',component: register},
