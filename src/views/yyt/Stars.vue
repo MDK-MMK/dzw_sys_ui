@@ -111,7 +111,9 @@ export default {
       if (value === "") {
         callback(new Error("请输入星级名称！"));
       } else {
-        const axios = require("axios");
+        console.log(this.Starsa.sid);
+        if(this.Starsa.sid==0){
+           const axios = require("axios");
         let that = this;
         axios
           .get("http://localhost:8080/dzw_sys/api/Starss/byName/" + value)
@@ -122,6 +124,10 @@ export default {
               callback();
             }
           });
+        }else{
+          callback();
+        }
+       
       }
     };
     var validatexmoney = (rule, value, callback) => {
@@ -191,6 +197,10 @@ export default {
       this.$confirm("确认关闭？")
         .then((_) => {
           done();
+          this.Starsa.starts = "";
+        this.Starsa.xmoney = "";
+        this.Starsa.sid= 0;
+        //console.log(this.Starsa);
         })
         .catch((_) => {});
     },
@@ -202,6 +212,7 @@ export default {
           this.fullscreenLoading = true;
           const axios = require("axios");
           let that = this;
+          console.log(this.Starsa.sid);
           if(this.Starsa.sid===0){
             axios
             .post(
@@ -243,7 +254,7 @@ export default {
                 that.Starsa.starts = "";
                 that.Starsa.xmoney = "";
                 that.Starsa.sid =0;
-                that.selectAll(that.size, that.currentPage);
+                that.selectAll(that.size, 1);
               } else {
                 that.$message.error("修改失败!");
               }
@@ -284,7 +295,7 @@ export default {
               message: "移除成功",
               type: "success",
             });
-            that.selectAll(that.size, that.currentPage);
+            that.selectAll(that.size,1);
           } else {
             that.$message.error("添加失败!");
           }
