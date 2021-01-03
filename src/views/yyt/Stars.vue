@@ -111,7 +111,7 @@ export default {
       if (value === "") {
         callback(new Error("请输入星级名称！"));
       } else {
-        console.log(this.Starsa.sid);
+        //console.log(this.Starsa.sid);
         if(this.Starsa.sid==0){
            const axios = require("axios");
         let that = this;
