@@ -7,7 +7,7 @@ import home from '../views/Home.vue'
 import stars from '../views/yyt/Stars'
 import team from '../views/yyt/Team.vue'
 
-import a from '../views/tzy/a.vue'
+import fdjbrand from '../views/tzy/fdjbrand.vue'
 
 
 Vue.use(Router)
@@ -22,10 +22,11 @@ export default new Router({
       {path: '/stars',name: 'stars',component: stars},
         //技工班组
       {path: '/team',name: 'team',component: team},
+       //发动机品牌
+      {path: '/fdjbrand',name: 'fdjbrand',component: fdjbrand},
     ]},
     //注册
     {path: '/register',name: 'register',component: register},
-     //登录
-    {path: '/a',name: 'a',component: a},
+     
   ]
 })
