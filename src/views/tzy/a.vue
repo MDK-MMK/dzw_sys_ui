@@ -49,9 +49,9 @@
             alert(shopid);
               const axios = require("axios");
               axios
-              .get("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/delete"+this.shopid)
+              .get("http://localhost:8080/dzw_sys/api/tzy/shop/delete/"+shopid)
               .then(function (res) {
-                  if(res>0){
+                  if(res.data>0){
                     alert("删除成功");
                   }else{
                     alert("删除失败");
