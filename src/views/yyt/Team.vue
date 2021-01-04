@@ -15,6 +15,7 @@
               type="primary"
               icon="el-icon-circle-plus-outline"
               circle
+              @click="dialogVisibleTeamI = true"
             ></el-button>
             <el-button
               type="warning"
@@ -22,7 +23,12 @@
               circle
               @click="updateT()"
             ></el-button>
-            <el-button type="danger" icon="el-icon-delete" circle></el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              @click="delT()"
+            ></el-button>
           </el-col>
           <el-col :xs="8" :sm="6" :md="4" :lg="1" :xl="1">
             <el-divider direction="vertical"></el-divider>
@@ -57,23 +63,23 @@
               </el-option>
             </el-select>
             <el-select
-              v-model="artisan.sid"
+              v-model="artisan.zid"
               placeholder="请选择职位"
               style="width: 15%"
             >
               <el-option label="请选择职位" value=""> </el-option>
               <el-option
-                v-for="(item, i) in Starsoptions"
+                v-for="(item, i) in Zhiweioptions"
                 :key="i"
-                :label="item.starts"
-                :value="item.sid"
+                :label="item.zname"
+                :value="item.zid"
               >
               </el-option>
             </el-select>
             <el-button
               type="primary"
               icon="el-icon-search"
-              @click="selectArtisanAll"
+              @click="selectArtisanAll(size,currentPage)"
               >搜索</el-button
             >
             <el-button type="primary" icon="el-icon-circle-plus-outline"
@@ -113,7 +119,13 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="zid" label="职位"> </el-table-column>
+              <el-table-column prop="zid" label="职位">
+                <template slot-scope="scope">
+                  <div v-for="(temp, i) in Zhiweioptions" :key="i">
+                    <p v-if="temp.zid == scope.row.zid">{{ temp.zname }}</p>
+                  </div>
+                </template>
+              </el-table-column>
               <el-table-column prop="tid" label="班组">
                 <template slot-scope="scope">
                   <div v-for="(temp, i) in team" :key="i">
@@ -135,58 +147,276 @@
                     type="warning"
                     icon="el-icon-edit"
                     circle
+                    v-loading.fullscreen.lock="fullscreenLoading"
                     @click="updateA(scope.row)"
                   ></el-button>
                   <el-button
                     type="danger"
                     icon="el-icon-delete"
                     circle
+                    v-loading.fullscreen.lock="fullscreenLoading"
                     @click="delA(scope.row)"
                   ></el-button>
                 </template>
               </el-table-column>
             </el-table>
+            <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[4, 6, 8, 10]"
+          :page-size="size"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        >
+        </el-pagination>
           </el-col>
         </el-row>
       </el-card>
     </el-col>
-
+    <!-- 修改 -->
     <el-dialog title="班组" :visible.sync="dialogVisibleTeam" width="30%">
-      班组名称：<el-input v-model="teama.tname"></el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
-      </span>
+      <el-form
+        :rules="rulesTeam"
+        ref="teama"
+        class="demo-ruleForm"
+        :model="teama"
+        label-width="25%"
+      >
+        <el-form-item label="班组名称：" prop="tname">
+          <el-input v-model="teama.tname" clearable></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            @click="onSubmitUpdate('teama')"
+            v-loading.fullscreen.lock="fullscreenLoading"
+            >提交</el-button
+          >
+          <el-button @click="dialogVisibleTeam = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <!--新增  -->
+    <el-dialog title="班组" :visible.sync="dialogVisibleTeamI" width="30%">
+      <el-form
+        :model="teamaa"
+        label-width="25%"
+        :rules="rulesTeamI"
+        ref="teamaa"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="班组名称：" prop="tname">
+          <el-input v-model="teamaa.tname" clearable></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            @click="onSubmitInsert('teamaa')"
+            v-loading.fullscreen.lock="fullscreenLoading"
+            >提交</el-button
+          >
+          <el-button @click="dialogVisibleTeamI = false">取消</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
   </el-row>
 </template>
 <script>
 export default {
   data() {
+    //新增班组
+    var validateTnaemI = (rule, value, callback) => {
+      //console.log(value);
+      if (value === "") {
+        callback(new Error("请输入班组名称！"));
+      } else {
+        const axios = require("axios");
+        let that = this;
+        axios
+          .get("http://localhost:8080/dzw_sys/api/Teams/ByName/" + value)
+          .then(function (res) {
+            //console.log(res.data);
+            if (res.data === "") {
+              callback();
+            } else {
+              callback(new Error("此班组名称已被占用！"));
+            }
+          });
+      }
+    };
+    //修改班组
+    var validateTnaem = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入班组名称！"));
+      } else {
+        if (this.xiugName === value) {
+          callback();
+        } else {
+          const axios = require("axios");
+          let that = this;
+          axios
+            .get("http://localhost:8080/dzw_sys/api/Teams/ByName/" + value)
+            .then(function (res) {
+              //console.log(res.data);
+              if (res.data === "") {
+                callback();
+              } else {
+                callback(new Error("此班组名称已被占用！"));
+              }
+            });
+        }
+      }
+    };
     return {
       team: [],
       tableData: [],
       artisan: { sid: "", zid: "", aphone: "", aname: "", tid: 0 },
       Stars: { starts: "" }, //条件查询
       Starsoptions: [], //星级
-      teama: { tname: "", tid: 0 },
+      teama: { tname: "", tid: 0 }, //新增
+      teamaa: { tname: "", tid: 0 }, //修改
       dialogVisibleTeam: false,
+      dialogVisibleTeamI: false,
       transitions: false,
+      fullscreenLoading: false,
+      Zhiweioptions: [], //职位
+      zhiwei: { zid: 0, zname: "" },
+      rulesTeam: {
+        tname: [{ validator: validateTnaem, trigger: "blur" }],
+      },
+      rulesTeamI: {
+        tname: [{ validator: validateTnaemI, trigger: "blur" }],
+      },
+      xiugName: "",
+      currentPage: 1, //当前页数
+      size: 4, //每页大小
+      total: 0, //总条数
     };
   },
   created() {
     this.selectTeamAll();
-    this.selectArtisanAll();
+    this.selectArtisanAll(this.size,this.currentPage);
     this.selectStarsAll();
+    this.selectZhiWeiAll();
   },
   methods: {
+    //分页
+    handleSizeChange(val) {
+      // console.log(`每页 ${val} 条`);
+      this.size = val;
+      this.selectArtisanAll(this.size, this.currentPage);
+    },
+    handleCurrentChange(val) {
+      // console.log(`当前页: ${val}`);
+      this.currentPage = val;
+      this.selectArtisanAll(this.size, this.currentPage);
+    },
+    //判断是否可修改
+    updateT() {
+      if (this.teama.tid == 0) {
+        this.$message({
+          message: "请先选中需要编辑的班组!",
+          type: "warning",
+        });
+      } else {
+        this.xiugName = this.teama.tname;
+        this.dialogVisibleTeam = true;
+      }
+    },
+    //删除班组
+    delT() {
+      const axios = require("axios");
+      let that = this;
+      //this.fullscreenLoading=true;
+      axios
+        .delete(
+          "http://localhost:8080/dzw_sys/api/Teams/delete/" + this.teama.tid
+        )
+        .then(function (res) {
+          //console.log(res.data);
+          if (res.data == 1) {
+            that.$message({
+              message: "移除成功",
+              type: "success",
+            });
+            that.teama.tname = "";
+            that.teama.tid = "";
+            that.selectTeamAll();
+            that.artisan.tid = 0;
+            that.selectArtisanAll(1,this.currentPage);
+          } else {
+            that.$message.error("移除失败!");
+          }
+          // that.fullscreenLoading=false;
+        });
+    },
+    //修改班组
+    onSubmitUpdate(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+      const axios = require("axios");
+      let that = this;
+      this.fullscreenLoading = true;
+      axios
+        .put("http://localhost:8080/dzw_sys/api/Teams/update", this.teama)
+        .then(function (res) {
+          //console.log(res.data);
+          if (res.data == 1) {
+            that.$message({
+              message: "修改成功",
+              type: "success",
+            });
+            that.dialogVisibleTeam = false;
+            that.teamaa.tname = "";
+            that.selectTeamAll();
+          } else {
+            that.$message.error("修改失败!");
+          }
+          that.fullscreenLoading = false;
+        });
+        } else {
+          return false;
+        }
+      });
+    },
+    //新增班组
+    onSubmitInsert(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const axios = require("axios");
+          let that = this;
+          this.fullscreenLoading = true;
+          axios
+            .post("http://localhost:8080/dzw_sys/api/Teams/insert", this.teamaa)
+            .then(function (res) {
+              //console.log(res.data);
+              if (res.data == 1) {
+                that.$message({
+                  message: "添加成功",
+                  type: "success",
+                });
+                that.dialogVisibleTeamI = false;
+                that.teamaa.tname = "";
+                that.selectTeamAll();
+              } else {
+                that.$message.error("添加失败!");
+              }
+              that.fullscreenLoading = false;
+            });
+        } else {
+          return false;
+        }
+      });
+    },
+    //退出
     close() {
       this.teama.tid = 0;
       this.teama.tname = "";
       this.artisan.tid = 0;
-      console.log(this.teama);
+      this.selectArtisanAll(this.size,this.currentPage);
+      //console.log(this.teama);
     },
     //点击班组
     rowClick(row) {
@@ -194,9 +424,9 @@ export default {
       this.teama.tid = row.tid;
       this.teama.tname = row.tname;
       this.artisan.tid = row.tid;
-      console.log(this.teama);
+      //console.log(this.teama);
       this.transitions = true;
-      this.selectArtisanAll();
+      this.selectArtisanAll(this.size,this.currentPage);
     },
     //查询星级
     selectStarsAll() {
@@ -219,14 +449,26 @@ export default {
       });
     },
     //查询技工
-    selectArtisanAll() {
+    selectArtisanAll(size,currentPage) {
       const axios = require("axios");
       let that = this;
       axios
-        .post("http://localhost:8080/dzw_sys/api/Artisans/ByTid", this.artisan)
+        .post("http://localhost:8080/dzw_sys/api/Artisans/ByTid/"+size+"/"+currentPage, this.artisan)
         .then(function (res) {
           //console.log(res.data);
-          that.tableData = res.data;
+          that.tableData = res.data.list;
+          that.total=res.data.total;
+        });
+    },
+    //查询职位
+    selectZhiWeiAll() {
+      const axios = require("axios");
+      let that = this;
+      axios
+        .post("http://localhost:8080/dzw_sys/api/Zhiwei/all/100/1", this.zhiwei)
+        .then(function (res) {
+          //console.log(res.data);
+          that.Zhiweioptions = res.data.list;
         });
     },
   },
