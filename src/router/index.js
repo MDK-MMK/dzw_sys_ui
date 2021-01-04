@@ -3,8 +3,12 @@ import Router from 'vue-router'
 import login from '../views/Login.vue'
 import register from '../views/Register.vue'
 import home from '../views/Home.vue'
+
 import stars from '../views/yyt/Stars'
 import team from '../views/yyt/Team.vue'
+
+import a from '../views/tzy/a.vue'
+
 
 Vue.use(Router)
 
@@ -21,5 +25,7 @@ export default new Router({
     ]},
     //注册
     {path: '/register',name: 'register',component: register},
+     //登录
+    {path: '/a',name: 'a',component: a},
   ]
 })
