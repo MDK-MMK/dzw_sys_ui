@@ -1,7 +1,8 @@
 <template>
 <div>
+  <h1>发动机品牌</h1><br><br><br>
  <el-row>
-
+  <el-col :span="1">&nbsp;</el-col>
   <el-col :span="8">
     <div class="grid-content bg-purple-dark">
       发动机名称：<el-input v-model="cx" placeholder="请输入发动机品牌" style="width:290px"></el-input> 
@@ -48,8 +49,8 @@
 
 <!-- 添加发动机 -->
      <div id="app">
-			<el-dialog :before-close="handlerClose" @opened="handlerOpen" :visible.sync="isShow" title="添加发动机品牌" width="50%" center>
-				<div id="cnt" v-loading="loading">
+			<el-dialog  :visible.sync="isShow" title="添加发动机品牌" width="50%" center>
+				<div id="cnt" >
 
             <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
@@ -128,8 +129,8 @@
 
 <!-- 修改模态框 -->
   <div id="app">
-			<el-dialog :before-close="handlerClose" @opened="handlerOpen" :visible.sync="isShows" title="修改发动机品牌" width="50%" center>
-				<div id="cnt" v-loading="loading">
+			<el-dialog  :visible.sync="isShows" title="修改发动机品牌" width="50%" center>
+				<div id="cnt" >
 
             <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
@@ -238,7 +239,7 @@
       },
       created(){  
         this.queryshop();
-        this.queryfirm();
+        this.queryfirm(1,100);
         this.querycartypes();
       },
       methods:{
@@ -253,7 +254,7 @@
                 axios
                 .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryshopname/"+this.cx)
                 .then(function (res) {
-                  alert(res.data)
+                  //alert(res.data)
                       that.shops = res.data;
                 });
               }
@@ -296,15 +297,16 @@
                 });
           },
           //查询全部供应商
-          queryfirm(){
+          queryfirm(p,s){
+            //alert(p+"/"+s)
             //axios
             const axios = require("axios");
             let that = this;
             axios
-              .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryfirm")
+              .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryfirm/"+p+"/"+s)
               .then(function (res) {
-                  that.options = res.data;
-                  
+                  that.options = res.data.list;
+                  console.log(res.data.list);
               });
           },
           //查询全部车辆品牌
@@ -354,7 +356,6 @@
               .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryshop")
               .then(function (res) {
                 that.shops = res.data;
-                  console.log(res);
               });
           },         
           //删除信息 

@@ -8,6 +8,7 @@ import stars from '../views/yyt/Stars'
 import team from '../views/yyt/Team.vue'
 
 import fdjbrand from '../views/tzy/fdjbrand.vue'
+import supplier from '../views/tzy/supplier.vue'
 
 
 Vue.use(Router)
@@ -24,6 +25,8 @@ export default new Router({
       {path: '/team',name: 'team',component: team},
        //发动机品牌
       {path: '/fdjbrand',name: 'fdjbrand',component: fdjbrand},
+       //供应商管理
+      {path: '/supplier',name: 'supplier',component: supplier},
     ]},
     //注册
     {path: '/register',name: 'register',component: register},
