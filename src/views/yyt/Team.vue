@@ -615,13 +615,23 @@ export default {
     //重置技工
     resetForm(formName) {
       this.$refs[formName].resetFields();
+        this.Artisan.aphone= "";
+        this.Artisan.sid= 1;
+        this.Artisan.zid= "6";
+        this.Artisan.tid= 1;
+        this.Artisan.aname= "";
+        this.Artisan.asex= "0";
+        this.Artisan.address= "";
+        this.Artisan.acaid= "";
+        this.Artisan.acraft= "";
+        this.Artisan.arzday= "";
     },
     //关闭
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then((_) => {
-          done();
           this.resetForm('Artisan');
+          done();
         })
         .catch((_) => {});
     },
