@@ -143,7 +143,7 @@
               <span>职工管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="6-1" @click="addTab(editableTabsValue)"
+              <el-menu-item index="6-1" @click="addTab('/emp')"
                 >职工列表</el-menu-item
               >
               <el-menu-item index="6-2" @click="addTab(editableTabsValue)"
@@ -152,7 +152,7 @@
               <el-menu-item index="6-3" @click="addTab(editableTabsValue)"
                 >通讯目录</el-menu-item
               >
-              <el-menu-item index="6-3" @click="addTab(editableTabsValue)"
+              <el-menu-item index="6-4" @click="addTab('/zhiwei')"
                 >岗位定义</el-menu-item
               >
             </el-menu-item-group>
