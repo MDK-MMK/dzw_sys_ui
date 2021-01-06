@@ -33,7 +33,6 @@
           
       </el-table-column>
 
-
       <el-table-column label="操作" prop="shopid">
         <template slot-scope="scope">
 
@@ -135,7 +134,7 @@
             <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  发动机名称：<el-input v-model="shop.shopname" placeholder="请输入发动机名称" style="width:290px"></el-input> 
+                  发动机名称：<el-input v-model="xgshop.shopname" placeholder="请输入发动机名称" style="width:290px"></el-input> 
                 </div>
               </el-col>
             </el-row>
@@ -143,7 +142,7 @@
              <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  发动机价格：<el-input v-model="shop.sellingprice" placeholder="请输入发动机价格" style="width:290px"></el-input> 
+                  发动机价格：<el-input v-model="xgshop.sellingprice" placeholder="请输入发动机价格" style="width:290px"></el-input> 
                 </div>
               </el-col>
             </el-row>
@@ -168,7 +167,7 @@
             <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  适合的车型：<el-input v-model="shop.numbering" placeholder="请输入适合的车型" style="width:290px"></el-input> 
+                  适合的车型：<el-input v-model="xgshop.numbering" placeholder="请输入适合的车型" style="width:290px"></el-input> 
                 </div>
               </el-col>
             </el-row>
@@ -176,7 +175,7 @@
              <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  发动机数量：<el-input v-model="shop.quantity" placeholder="请输入发动机数量" style="width:290px"></el-input> 
+                  发动机数量：<el-input v-model="xgshop.quantity" placeholder="请输入发动机数量" style="width:290px"></el-input> 
                 </div>
               </el-col>
             </el-row>
@@ -200,12 +199,24 @@
 
 				</div>
 				<span slot="footer" class="dialog-footer">
-	    			<el-button @click="isShow=false">取 消</el-button>
+	    			<el-button @click="isShows=false">取 消</el-button>
 	    			<el-button type="primary" @click="queding()">确 定</el-button>
   				</span>
 			</el-dialog>
 
 		</div>
+
+
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[4, 6, 8, 10]"
+          :page-size="size"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        >
+        </el-pagination>
 </div>
 
   
@@ -226,6 +237,15 @@
           ops:1,
           cx:'',
           shop:{
+            firmid:'',
+            shopname:'',
+            sellingprice:'',
+            numbering:'',
+            quantity:'',
+            weight:'',
+            goodid:1
+          },
+           xgshop:{
             shopid:'',
             firmid:'',
             shopname:'',
@@ -234,8 +254,11 @@
             quantity:'',
             weight:'',
             goodid:1
-          }
-          };
+          },
+           currentPage: 1, //当前页数
+           size: 4, //每页大小
+           total: 0, //总条数
+        };
       },
       created(){  
         this.queryshop();
@@ -243,6 +266,17 @@
         this.querycartypes();
       },
       methods:{
+          //分页
+          handleSizeChange(val) {
+            // console.log(`每页 ${val} 条`);
+            this.size = val;
+            this.queryshop();
+          },
+          handleCurrentChange(val) {
+            // console.log(`当前页: ${val}`);
+            this.currentPage = val;
+            this.queryshop();
+          }, 
           //根据发动机名称模糊查询
           chaxun(){
               //axios
@@ -263,22 +297,22 @@
           //修改发动机
           update(xg){
               this.isShows = true;
-              this.shop.shopname = xg.shopname;
-              this.shop.sellingprice = xg.sellingprice;
-              this.shop.numbering = xg.numbering;
-              this.shop.quantity = xg.quantity;
-              this.shop.shopid = xg.shopid;
+              this.xgshop.shopname = xg.shopname;
+              this.xgshop.sellingprice = xg.sellingprice;
+              this.xgshop.numbering = xg.numbering;
+              this.xgshop.quantity = xg.quantity;
+              this.xgshop.shopid = xg.shopid;
               this.op = xg.firmid;
               this.ops = xg.weight;
-              this.shop.firmid = this.op;
-              this.shop.weight = this.ops;
+              this.xgshop.firmid = this.op;
+              this.xgshop.weight = this.ops;
             
           },queding(){
               //axios
               const axios = require("axios");
               let that = this;
               axios
-                .post("http://localhost:8080/dzw_sys/api/tzy/shop/modifyshop",this.shop)
+                .post("http://localhost:8080/dzw_sys/api/tzy/shop/modifyshop",this.xgshop)
                 .then(function (res) {
                   if(res.data){
                       that.$message({
@@ -298,14 +332,14 @@
           },
           //查询全部供应商
           queryfirm(p,s){
-            //alert(p+"/"+s)
             //axios
             const axios = require("axios");
             let that = this;
             axios
-              .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryfirm/"+p+"/"+s)
+              .get("http://localhost:8080/dzw_sys/api/tzy/firm/queryfirm/"+p+"/"+s)
               .then(function (res) {
                   that.options = res.data.list;
+                 
                   console.log(res.data.list);
               });
           },
@@ -315,7 +349,7 @@
             const axios = require("axios");
             let that = this;
             axios
-              .get("http://localhost:8080/dzw_sys/api/tzy/shop/querycartypes")
+              .get("http://localhost:8080/dzw_sys/api/tzy/cartypes/querycartypes")
               .then(function (res) {
                   that.cartypes = res.data;
                   
@@ -336,6 +370,7 @@
                       type: 'success',
                       message: '添加成功'
                     });
+                     window.location.reload();
                      that.isShow = false;
                      that.queryshop();
                  }else{
@@ -353,9 +388,10 @@
             const axios = require("axios");
             let that = this;
             axios
-              .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryshop")
+              .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryshop/"+this.currentPage+"/"+this.size)
               .then(function (res) {
-                that.shops = res.data;
+                that.shops = res.data.list;
+                that.total = res.data.total;
               });
           },         
           //删除信息 
