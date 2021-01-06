@@ -34,6 +34,7 @@
                 :header-cell-style="{ 'text-align': 'center' }"
                 :cell-style="{ 'text-align': 'center' }"
                 :data="tables"
+                height="500"
                 @row-click="selectEmpByBu" 
               >
                 <el-table-column
@@ -45,7 +46,7 @@
               </el-table>
             </el-col>
             <el-col :lg="2"></el-col>
-            <el-col :xs="4" :sm="6" :md="19" :lg="19" :xl="11">
+            <el-col :xs="4" :sm="6" :md="19" :lg="20" :xl="11">
               <el-table
                 :header-cell-style="{ 'text-align': 'center' }"
                 :cell-style="{ 'text-align': 'center' }"
@@ -197,7 +198,7 @@ export default {
 <style scoped>
 .input-show {
   width: 40%;
-  margin-left: 450px;
+  margin-left: 40%;
   margin-bottom: 2%;
 }
 .tag{
