@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import login from '../views/Login.vue'
 import register from '../views/Register.vue'
 import home from '../views/Home.vue'
-
+import workcar from '../views/yyt/Workcar.vue'
 import stars from '../views/yyt/Stars'
 import team from '../views/yyt/Team.vue'
 
@@ -22,6 +22,8 @@ export default new Router({
       {path: '/stars',name: 'stars',component: stars},
         //技工班组
       {path: '/team',name: 'team',component: team},
+      //外勤车辆
+      {path: '/workcar',name: 'workcar',component: workcar},
     ]},
     //注册
     {path: '/register',name: 'register',component: register},

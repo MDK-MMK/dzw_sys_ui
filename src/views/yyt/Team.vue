@@ -538,7 +538,7 @@ export default {
         axios
           .get("http://localhost:8080/dzw_sys/api/Artisans/ByZid/" + tid)
           .then(function (res) {
-            console.log(res.data);
+            //console.log(res.data);
             if (res.data != 0) {
               that.zz = true;
               that.Artisan.zid = "6";
