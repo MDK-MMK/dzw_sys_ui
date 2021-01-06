@@ -3,7 +3,7 @@
     <el-col :span="24">
       <el-card shadow="always">
         <el-row :gutter="10">
-          <el-col :xs="8" :sm="6" :md="4" :lg="20" :xl="1">
+          <el-col :xs="8" :sm="6" :md="6" :lg="20" :xl="1">
             <el-input
               type="text"
               placeholder="请输入职位名称"
