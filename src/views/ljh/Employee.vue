@@ -101,12 +101,14 @@
         </el-card>
       </el-col>
     </el-row>
+   
   </div>
 </template>
 
  
 
 <script>
+
 export default {
   data() {
     return {
@@ -207,3 +209,19 @@ export default {
   margin-left: -90px;
 }
 </style>
+=======
+  export default {
+    data() {
+      return {
+        tableData: [],
+        tables:[]
+      }
+    },
+    methods: {
+      formatter(row, column) {
+        return row.address;
+      }
+    }
+  }
+</script>
+>>>>>>> master

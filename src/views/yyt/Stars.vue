@@ -107,11 +107,11 @@
 <script>
 export default {
   data() {
+    //星级名称
     var validatestarts = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入星级名称！"));
       } else {
-        //console.log(this.Starsa.sid);
         if(this.Starsa.sid==0){
            const axios = require("axios");
         let that = this;
@@ -125,11 +125,26 @@ export default {
             }
           });
         }else{
-          callback();
+          if(this.xiugname===value){
+            callback();
+          }else{
+             const axios = require("axios");
+        let that = this;
+        axios
+          .get("http://localhost:8080/dzw_sys/api/Starss/byName/" + value)
+          .then(function (res) {
+            if (res.data != "") {
+              callback(new Error("此名称已被占用！"));
+            } else {
+              callback();
+            }
+          });
+          }
         }
        
       }
     };
+    //维修金额
     var validatexmoney = (rule, value, callback) => {
       const age = /^[0-9]*$/;
       if (value === "") {
@@ -157,6 +172,7 @@ export default {
         starts: [{ validator: validatestarts, trigger: "blur" }],
         xmoney: [{ validator: validatexmoney, trigger: "blur" }],
       },
+      xiugname:'',
     };
   },
   created() {
@@ -288,7 +304,7 @@ export default {
       axios
         .delete("http://localhost:8080/dzw_sys/api/Starss/delete/" + row.sid)
         .then(function (res) {
-          console.log(res.data);
+          //console.log(res.data);
           that.fullscreenLoading = false;
           if (res.data == 1) {
             that.$message({
@@ -301,12 +317,13 @@ export default {
           }
         });
     },
-
+  
     update(row) {
       this.dialogVisible = true;
       this.Starsa.starts = row.starts;
       this.Starsa.xmoney = row.xmoney;
       this.Starsa.sid = row.sid;
+      this.xiugname=row.starts;
     },
   },
 };
