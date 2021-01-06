@@ -45,7 +45,6 @@
                 </el-table-column>
               </el-table>
             </el-col>
-            <el-col :lg="2"></el-col>
             <el-col :xs="4" :sm="6" :md="19" :lg="20" :xl="11">
               <el-table
                 :header-cell-style="{ 'text-align': 'center' }"
@@ -62,7 +61,7 @@
                   prop="etrytimes"
                   label="入职日期"
                   sortable
-                  width="180"
+                  width="160"
                 >
                 </el-table-column>
                 <el-table-column prop="elaimes" label="离职时间" sortable>
