@@ -79,10 +79,13 @@
             <el-button
               type="primary"
               icon="el-icon-search"
-              @click="selectArtisanAll(size,currentPage)"
+              @click="selectArtisanAll(size, currentPage)"
               >搜索</el-button
             >
-            <el-button type="primary" icon="el-icon-circle-plus-outline"
+            <el-button
+              type="primary"
+              icon="el-icon-circle-plus-outline"
+              @click="dialogVisibleArtisan = true"
               >添加技工</el-button
             >
           </el-col>
@@ -134,7 +137,12 @@
                 </template>
               </el-table-column>
               <el-table-column prop="aname" label="姓名"> </el-table-column>
-              <el-table-column prop="asex" label="性别"> </el-table-column>
+              <el-table-column prop="asex" label="性别">
+                <template slot-scope="scope">
+                  <p v-if="scope.row.asex==0">男</p>
+                  <p v-else>女</p>
+                </template>
+                 </el-table-column>
               <el-table-column prop="address" label="地址"> </el-table-column>
               <el-table-column prop="acaid" label="身份证"> </el-table-column>
               <el-table-column prop="acraft" label="维修工种">
@@ -161,15 +169,15 @@
               </el-table-column>
             </el-table>
             <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[4, 6, 8, 10]"
-          :page-size="size"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-        >
-        </el-pagination>
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-sizes="[4, 6, 8, 10]"
+              :page-size="size"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total"
+            >
+            </el-pagination>
           </el-col>
         </el-row>
       </el-card>
@@ -218,6 +226,73 @@
             >提交</el-button
           >
           <el-button @click="dialogVisibleTeamI = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <el-dialog
+      title="技工"
+      :visible.sync="dialogVisibleArtisan"
+      width="50%"
+      :before-close="handleClose"
+    >
+      <el-form
+        :inline="true"
+        :model="Artisan"
+        :rules="rules"
+        ref="Artisan"
+        label-width="100px"
+        class="demo-form-inline"
+      >
+        <el-form-item label="手机号码" prop="aphone">
+          <el-input v-model="Artisan.aphone"></el-input>
+        </el-form-item>
+        <el-form-item label="技工姓名" prop="aname">
+          <el-input v-model="Artisan.aname"></el-input>
+        </el-form-item>
+        <el-form-item label="星级" prop="sid">
+          <el-select v-model="Artisan.sid" placeholder="请选择" style="width:93%;">
+              <el-option
+                v-for="(item, i) in Starsoptions"
+                :key="i"
+                :label="item.starts"
+                :value="item.sid"
+              >
+              </el-option>
+          </el-select>
+        </el-form-item>
+        <!-- <el-form-item label="性别" prop="asex">
+          <el-radio v-model="Artisan.asex" label="0" border >男</el-radio>
+          <el-radio v-model="Artisan.asex" label="1" border>女</el-radio>
+        </el-form-item> -->
+
+        <el-form-item label="地址" prop="address">
+          <el-input v-model="Artisan.address"></el-input>
+        </el-form-item>
+        
+        <el-form-item label="职位" prop="zid">
+          <el-select
+              v-model="Artisan.zid"
+              style="width: 95%"
+            >
+              <el-option
+                label="技工组长"
+                value="5"
+              >
+              </el-option>
+              <el-option
+                label="普通技工"
+                value="6"
+              >
+              </el-option>
+            </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('Artisan')"
+            >立即创建</el-button
+          >
+          <el-button @click="resetForm('Artisan')">重置</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -293,15 +368,56 @@ export default {
       currentPage: 1, //当前页数
       size: 4, //每页大小
       total: 0, //总条数
+      dialogVisibleArtisan: false, //新增技工
+      Artisan: {
+        aphone: "",
+        sid: "",
+        zid: "",
+        tid: "",
+        aname: "",
+        asex: '0',
+        address: "",
+        acaid: "",
+        acraft: "",
+        arzday: "",
+      }, //技工
+      rules: {
+        // aphone: [{ validator: validateAphone, trigger: "blur" }],
+        // aname: [{ validator: validateAname, trigger: "blur" }],
+        // address: [{ validator: validateAddress, trigger: "blur" }],
+        // acaid: [{ validator: validateAcaid, trigger: "blur" }],
+        // acraft: [{ validator: validateAcraft, trigger: "blur" }],
+      },
     };
   },
   created() {
     this.selectTeamAll();
-    this.selectArtisanAll(this.size,this.currentPage);
+    this.selectArtisanAll(this.size, this.currentPage);
     this.selectStarsAll();
     this.selectZhiWeiAll();
   },
   methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    //关闭
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then((_) => {
+          done();
+        })
+        .catch((_) => {});
+    },
     //分页
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
@@ -345,7 +461,7 @@ export default {
             that.teama.tid = "";
             that.selectTeamAll();
             that.artisan.tid = 0;
-            that.selectArtisanAll(1,this.currentPage);
+            that.selectArtisanAll(1, this.currentPage);
           } else {
             that.$message.error("移除失败!");
           }
@@ -356,26 +472,26 @@ export default {
     onSubmitUpdate(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-      const axios = require("axios");
-      let that = this;
-      this.fullscreenLoading = true;
-      axios
-        .put("http://localhost:8080/dzw_sys/api/Teams/update", this.teama)
-        .then(function (res) {
-          //console.log(res.data);
-          if (res.data == 1) {
-            that.$message({
-              message: "修改成功",
-              type: "success",
+          const axios = require("axios");
+          let that = this;
+          this.fullscreenLoading = true;
+          axios
+            .put("http://localhost:8080/dzw_sys/api/Teams/update", this.teama)
+            .then(function (res) {
+              //console.log(res.data);
+              if (res.data == 1) {
+                that.$message({
+                  message: "修改成功",
+                  type: "success",
+                });
+                that.dialogVisibleTeam = false;
+                that.teamaa.tname = "";
+                that.selectTeamAll();
+              } else {
+                that.$message.error("修改失败!");
+              }
+              that.fullscreenLoading = false;
             });
-            that.dialogVisibleTeam = false;
-            that.teamaa.tname = "";
-            that.selectTeamAll();
-          } else {
-            that.$message.error("修改失败!");
-          }
-          that.fullscreenLoading = false;
-        });
         } else {
           return false;
         }
@@ -415,7 +531,7 @@ export default {
       this.teama.tid = 0;
       this.teama.tname = "";
       this.artisan.tid = 0;
-      this.selectArtisanAll(this.size,this.currentPage);
+      this.selectArtisanAll(this.size, this.currentPage);
       //console.log(this.teama);
     },
     //点击班组
@@ -426,7 +542,7 @@ export default {
       this.artisan.tid = row.tid;
       //console.log(this.teama);
       this.transitions = true;
-      this.selectArtisanAll(this.size,this.currentPage);
+      this.selectArtisanAll(this.size, this.currentPage);
     },
     //查询星级
     selectStarsAll() {
@@ -449,15 +565,21 @@ export default {
       });
     },
     //查询技工
-    selectArtisanAll(size,currentPage) {
+    selectArtisanAll(size, currentPage) {
       const axios = require("axios");
       let that = this;
       axios
-        .post("http://localhost:8080/dzw_sys/api/Artisans/ByTid/"+size+"/"+currentPage, this.artisan)
+        .post(
+          "http://localhost:8080/dzw_sys/api/Artisans/ByTid/" +
+            size +
+            "/" +
+            currentPage,
+          this.artisan
+        )
         .then(function (res) {
           //console.log(res.data);
           that.tableData = res.data.list;
-          that.total=res.data.total;
+          that.total = res.data.total;
         });
     },
     //查询职位
@@ -477,5 +599,6 @@ export default {
 <style scoped>
 .lilist {
   margin: 5px 0px 5px 0px;
+  
 }
 </style>
