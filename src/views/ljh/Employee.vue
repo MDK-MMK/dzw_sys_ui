@@ -209,19 +209,3 @@ export default {
   margin-left: -90px;
 }
 </style>
-=======
-  export default {
-    data() {
-      return {
-        tableData: [],
-        tables:[]
-      }
-    },
-    methods: {
-      formatter(row, column) {
-        return row.address;
-      }
-    }
-  }
-</script>
->>>>>>> master
