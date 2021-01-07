@@ -95,24 +95,11 @@
             <el-form-item label="超出公里" prop="ccj">
               <el-input v-model="Workcara.ccj"></el-input>
             </el-form-item>
-            <el-form-item v-if="czta==0" label="车辆状态" prop="czt">
+            <el-form-item v-if="czta == 0" label="车辆状态" prop="czt">
               <el-select v-model="Workcara.czt" placeholder="请选择">
-                <el-option
-                  label="空闲状态"
-                  value="0"
-                >
-                </el-option>
-                <el-option
-                  disabled
-                  label="作业中"
-                  value="1"
-                >
-                </el-option>
-                <el-option
-                  label="维修中"
-                  value="2"
-                >
-                </el-option>
+                <el-option label="空闲状态" value="0"> </el-option>
+                <el-option disabled label="作业中" value="1"> </el-option>
+                <el-option label="维修中" value="2"> </el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -139,15 +126,31 @@ export default {
       if (value === "") {
         callback(new Error("请输入车牌号！"));
       } else {
-        axios
-          .get("http://127.0.0.1:8080/dzw_sys/api/Workcars/ByCaid/" + value)
-          .then(function (res) {
-            if (res.data == 1) {
-              callback(new Error("当前车牌号已有，请重新输入！"));
-            } else {
-              callback();
-            }
-          });
+        if (this.Workcara.wid != 0) {
+          if (this.xiug != value) {
+            axios
+              .get("http://127.0.0.1:8080/dzw_sys/api/Workcars/ByCaid/" + value)
+              .then(function (res) {
+                if (res.data == 1) {
+                  callback(new Error("当前车牌号已有，请重新输入！"));
+                } else {
+                  callback();
+                }
+              });
+          } else {
+            callback();
+          }
+        } else {
+          axios
+            .get("http://127.0.0.1:8080/dzw_sys/api/Workcars/ByCaid/" + value)
+            .then(function (res) {
+              if (res.data == 1) {
+                callback(new Error("当前车牌号已有，请重新输入！"));
+              } else {
+                callback();
+              }
+            });
+        }
       }
     };
     //车辆品牌
@@ -193,26 +196,40 @@ export default {
       size: 4, //每页大小
       total: 0, //总条数
       dialogVisible: false,
-      Workcara: { caid: "", czt: '0', wid: 0, cbrand: "", qbj: "", ccj: "" },
+      Workcara: { caid: "", czt: "0", wid: 0, cbrand: "", qbj: "", ccj: "" },
       rules: {
         caid: [{ validator: validateCaid, trigger: "blur" }],
         cbrand: [{ validator: validateCbrand, trigger: "blur" }],
         qbj: [{ validator: validateQbj, trigger: "blur" }],
         ccj: [{ validator: validateCcj, trigger: "blur" }],
       },
-      czta:1,
-      d:false,
+      czta: 1,
+      d: false,
+      xiug: "",
     };
   },
   mounted() {
     this.selectAll();
   },
   methods: {
+    //修改点击
     updateA(row) {
-      this.Workcara = row;
-      this.czta=0;
-      this.Workcara.czt+="";
+      if (row.czt == 1) {
+        this.$message({
+          message: "当前车辆处于作业中，不可编辑!",
+          type: "warning",
+        });
+        return;
+      }
+      this.Workcara.wid = row.wid;
+      this.Workcara.caid = row.caid;
+      this.Workcara.czt = row.czt + "";
+      this.Workcara.cbrand = row.cbrand;
+      this.Workcara.qbj = row.qbj;
+      this.Workcara.ccj = row.ccj;
+      this.czta = 0;
       this.dialogVisible = true;
+      this.xiug = row.caid;
     },
     //提交
     submitForm(formName) {
@@ -271,14 +288,20 @@ export default {
     },
     //重置
     resetForm(formName) {
-      this.Workcara.wid = 0;
       this.$refs[formName].resetFields();
+      this.Workcara.caid = "";
+      this.Workcara.czt = "0";
+      this.Workcara.wid = 0;
+      this.Workcara.cbrand = "";
+      this.Workcara.qbj = "";
+      this.Workcara.ccj = "";
     },
     //关闭
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then((_) => {
           done();
+          this.resetForm("Workcara");
         })
         .catch((_) => {});
     },
@@ -312,13 +335,28 @@ export default {
     },
     //删除
     delA(row) {
-      if (row.czt != 0) {
+      if (row.czt == 1) {
         this.$message({
-          message: "当前车辆不处于空闲状态，不可移除!",
+          message: "当前车辆处于作业中，不可移除!",
           type: "warning",
         });
         return;
       }
+      let that=this;
+      axios
+        .delete("http://localhost:8080/dzw_sys/api/Workcars/delete/" + row.wid)
+        .then(function (res) {
+          if (res.data == 1) {
+                that.$message({
+                  message: "移除成功",
+                  type: "success",
+                });
+                that.selectAll();
+              } else {
+                that.$message.error("移除失败!");
+              }
+              //that.fullscreenLoading = false;
+        });
     },
   },
 };
