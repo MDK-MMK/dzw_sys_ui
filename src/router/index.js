@@ -9,6 +9,7 @@ import team from '../views/yyt/Team.vue'
 
 import fdjbrand from '../views/tzy/fdjbrand.vue'
 import gyssupplier from '../views/tzy/gyssupplier.vue'
+import weixiuitems from '../views/tzy/weixiuitems.vue'
 
 
 Vue.use(Router)
@@ -27,6 +28,8 @@ export default new Router({
       {path: '/fdjbrand',name: 'fdjbrand',component: fdjbrand},
        //供应商管理
       {path: '/gyssupplier',name: 'gyssupplier',component: gyssupplier},
+       //维修项目管理
+       {path: '/weixiuitems',name: 'weixiuitems',component: weixiuitems},
     ]},
     //注册
     {path: '/register',name: 'register',component: register},

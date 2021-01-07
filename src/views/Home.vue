@@ -32,7 +32,7 @@
               <el-menu-item index="1-1" @click="addTab('/gyssupplier')"
                 >供货单位</el-menu-item
               >
-              <el-menu-item index="1-2" @click="addTab('/ass')"
+              <el-menu-item index="1-2" @click="addTab('/weixiuitems')"
                 >维系项目</el-menu-item
               >
             </el-menu-item-group>

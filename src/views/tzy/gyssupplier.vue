@@ -46,10 +46,7 @@
                 </template>
             </el-table-column>
         </el-table>
-
-
-
-
+        
       <!-- 添加供应商 -->
      <div id="app">
 			<el-dialog :visible.sync="isShow" title="添加供应商" width="50%" center>
