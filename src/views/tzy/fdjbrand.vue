@@ -5,14 +5,14 @@
   <el-col :span="1">&nbsp;</el-col>
   <el-col :span="8">
     <div class="grid-content bg-purple-dark">
-      发动机名称：<el-input v-model="cx" placeholder="请输入发动机品牌" style="width:290px"></el-input> 
+      发动机名称：<el-input v-model="shopname" placeholder="请输入发动机品牌" style="width:290px"></el-input> 
     </div>
   </el-col>
 
   <el-col :span="3">
     <div class="grid-content bg-purple-dark">
         <el-row>
-            <el-button icon="el-icon-search" @click="chaxun()" circle></el-button>
+            <el-button icon="el-icon-search" @click="queryshop()" circle></el-button>
              <el-button @click="isShow = true">添加</el-button>
       </el-row>
     </div>
@@ -235,7 +235,7 @@
           options: [],
           op:1,
           ops:1,
-          cx:'',
+          shopname:null,
           shop:{
             firmid:'',
             shopname:'',
@@ -262,7 +262,7 @@
       },
       created(){  
         this.queryshop();
-        this.queryfirm(1,100);
+        this.queryfirm(null,1,100);
         this.querycartypes();
       },
       methods:{
@@ -277,23 +277,6 @@
             this.currentPage = val;
             this.queryshop();
           }, 
-          //根据发动机名称模糊查询
-          chaxun(){
-              //axios
-              const axios = require("axios");
-              let that = this;
-              if(this.cx==""){
-                  this.queryshop();
-              }else{
-                axios
-                .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryshopname/"+this.cx)
-                .then(function (res) {
-                  //alert(res.data)
-                      that.shops = res.data;
-                });
-              }
-              
-          },
           //修改发动机
           update(xg){
               this.isShows = true;
@@ -331,12 +314,12 @@
                 });
           },
           //查询全部供应商
-          queryfirm(p,s){
+          queryfirm(firmname,p,s){
             //axios
             const axios = require("axios");
             let that = this;
             axios
-              .get("http://localhost:8080/dzw_sys/api/tzy/firm/queryfirm/"+p+"/"+s)
+              .get("http://localhost:8080/dzw_sys/api/tzy/firm/queryfirm/"+firmname+"/"+p+"/"+s)
               .then(function (res) {
                   that.options = res.data.list;
                  
@@ -370,9 +353,9 @@
                       type: 'success',
                       message: '添加成功'
                     });
-                     window.location.reload();
                      that.isShow = false;
                      that.queryshop();
+                     window.location.reload();
                  }else{
                     that.$message({
                       type: 'success',
@@ -387,8 +370,9 @@
             //axios
             const axios = require("axios");
             let that = this;
+            if(this.shopname==""){this.shopname = null}
             axios
-              .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryshop/"+this.currentPage+"/"+this.size)
+              .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryshop/"+this.shopname+"/"+this.currentPage+"/"+this.size)
               .then(function (res) {
                 that.shops = res.data.list;
                 that.total = res.data.total;

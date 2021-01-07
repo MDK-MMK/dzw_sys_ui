@@ -343,7 +343,9 @@ export default {
       //axios
       const axios = require("axios");
       let that = this;
-      alert(this.firmname)
+      if(this.firmname==""){
+          this.firmname = null;
+      }
       axios
         .get("http://localhost:8080/dzw_sys/api/tzy/firm/queryfirm/"+this.firmname+"/"+this.currentPage+"/"+this.size)
         .then(function (res) {
