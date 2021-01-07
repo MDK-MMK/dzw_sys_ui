@@ -29,7 +29,7 @@
               <span>首页</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1" @click="addTab('/supplier')"
+              <el-menu-item index="1-1" @click="addTab('/gyssupplier')"
                 >供货单位</el-menu-item
               >
               <el-menu-item index="1-2" @click="addTab('/ass')"
