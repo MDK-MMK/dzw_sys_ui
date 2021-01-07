@@ -7,6 +7,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import BaiduMap from 'vue-baidu-map'
+Vue.use(BaiduMap,{ak:'MZDuxM1GGDUSPyytC7btUWUaUz2oOtSe'})
 Vue.use(ElementUI);
 Vue.use(VueAxios, axios)
 Vue.config.productionTip = false

@@ -8,6 +8,7 @@ import stars from '../views/yyt/Stars'
 import zhiwei from '../views/ljh/ZhiWei.vue'
 import employee from '../views/ljh/Employee.vue'
 import team from '../views/yyt/Team.vue'
+import Maintainzw from '../views/yyt/Maintainzw.vue'
 
 
 Vue.use(Router)
@@ -28,6 +29,8 @@ export default new Router({
       {path: '/team',name: 'team',component: team},
       //外勤车辆
       {path: '/workcar',name: 'workcar',component: workcar},
+       //站外接车
+       {path: '/Maintainzw',name: 'Maintainzw',component: Maintainzw},
     ]},
     //注册
     {path: '/register',name: 'register',component: register},
