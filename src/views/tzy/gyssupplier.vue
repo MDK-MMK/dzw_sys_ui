@@ -244,7 +244,7 @@ export default {
     },
     created(){
 
-       this.queryfirm(1,4);
+       this.queryfirm();
 
     },methods:{ 
     update(xg){
