@@ -11,74 +11,176 @@
           :inline="true"
           class="demo-form-inline"
         >
-        <el-col :span="8">
-          <el-form-item label="维修单号" prop="inid">
-            <el-input
-              disabled
-              v-model="inststion.inid"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="救援车辆" prop="wid">
-            <el-select v-model="inststion.wid" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+          <el-col :span="8">
+            <el-form-item label="维修单号" prop="inid">
+              <el-input
+                disabled
+                v-model="inststion.inid"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="救援车辆" prop="wid">
+              <el-select v-model="inststion.wid" placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="接车地址">
+              <el-input
+                style="width: 220px"
+                placeholder="请输入地址"
+                v-model="zd"
+                class="input-with-select"
               >
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="接车地址">
-            <el-input
-              style="width:220px"
-              placeholder="请输入地址"
-              v-model="zd"
-              class="input-with-select"
-            >
-              <el-button slot="append" icon="el-icon-search" @click="chaxdt()"
-                ></el-button
+                <el-button
+                  slot="append"
+                  icon="el-icon-search"
+                  @click="chaxdt()"
+                ></el-button>
+              </el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24" class="dt">
+            <el-row :gutter="12">
+              <el-col :span="24">
+                <el-card shadow="hover" id="container"></el-card>
+              </el-col>
+            </el-row>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item label="维修班组" prop="tid">
+              <el-select v-model="inststion.tid" placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="预计完工时间" prop="yjday">
+              <el-date-picker
+                v-model="inststion.yjday"
+                type="datetime"
+                placeholder="选择日期时间"
+                default-time="12:00:00"
+                format="yyyy-MM-dd HH:mm:ss"
               >
-            </el-input>
-          </el-form-item>
-        </el-col>
-          <el-form-item label="维修班组" prop="tid">
-            <el-select v-model="inststion.tid" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="客户车牌号" prop="cno">
+              <el-select v-model="inststion.cno" placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item label="里程数" prop="lc">
+              <el-input
+                disabled
+                v-model="inststion.lc"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="接车时间" prop="jcday">
+              <el-date-picker
+                v-model="inststion.jcday"
+                type="datetime"
+                placeholder="选择日期时间"
+                default-time="12:00:00"
+                format="yyyy-MM-dd HH:mm:ss"
               >
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="预计完工时间" prop="yjday">
-            <el-date-picker
-              v-model="inststion.yjday"
-              type="datetime"
-              placeholder="选择日期时间"
-              default-time="12:00:00"
-              format="yyyy-MM-dd HH:mm:ss"
-            >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="客户车牌号" prop="cno">
-            <el-select v-model="inststion.cno" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="维修备注" prop="insevent">
+              <el-input
+                type="textarea"
+                placeholder="请输入内容"
+                v-model="inststion.insevent"
+                maxlength="100"
+                show-word-limit
               >
-              </el-option>
-            </el-select>
-          </el-form-item>
+              </el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-table :data="tableData1" style="width: 100%">
+            <el-table-column label="编号" type="index" width="100px">
+            </el-table-column>
+            <el-table-column label="维修项目名" prop="shopname">
+            </el-table-column>
+            <el-table-column label="维修价格" prop="sellingprice">
+            </el-table-column>
+            <el-table-column label="技工耗时" prop="quantity">
+              <template slot-scope="scope">
+                {{ scope.row.quantity }}/h
+              </template>
+            </el-table-column>
+            <el-table-column align="right">
+              <template slot="header">
+                <el-button type="success" plain>添加维修项目</el-button>
+              </template>
+              <template>
+                <el-button type="danger" plain>移除维修项目</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <el-divider content-position="left">维修材料</el-divider>
+
+          <el-table :data="tableData1" style="width: 100%">
+            <el-table-column label="编号" type="index" width="100px">
+            </el-table-column>
+            <el-table-column label="维修材料名" prop="shopname">
+            </el-table-column>
+            <el-table-column label="维修材料价格" prop="sellingprice">
+            </el-table-column>
+            <el-table-column label="使用数量" prop="quantity">
+              <template slot-scope="scope">
+                <el-input-number
+                  v-model="scope.row.quantity"
+                  :min="1"
+                  :max="100"
+                  label="描述文字"
+                ></el-input-number>
+              </template>
+            </el-table-column>
+            <el-table-column align="right">
+              <template slot="header">
+                <el-button type="success" plain>添加维修材料</el-button>
+              </template>
+              <template>
+                <el-button type="danger" plain>移除维修材料</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
 
           <el-form-item>
             <el-button type="primary" @click="submitForm('inststion')"
@@ -87,12 +189,6 @@
             <el-button @click="resetForm('inststion')">重置</el-button>
           </el-form-item>
         </el-form>
-
-        <el-row :gutter="12">
-          <el-col :span="12">
-            <el-card shadow="hover" id="container"></el-card>
-          </el-col>
-        </el-row>
       </el-card>
     </el-col>
   </el-row>
@@ -115,9 +211,10 @@ export default {
         jdate: "",
         yjday: "",
         iszn: 0,
-        lc: 0,
+        lc: "",
         insevent: "",
       },
+      rules: {},
     };
   },
   mounted() {
@@ -178,7 +275,7 @@ export default {
   width: 100%;
   height: 300px;
 }
-/* .el-input{
-  width: 130px;
-} */
+.dt {
+  margin-bottom: 20px;
+}
 </style>
