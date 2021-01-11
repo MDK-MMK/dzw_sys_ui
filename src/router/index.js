@@ -7,6 +7,7 @@ import stars from '../views/yyt/Stars'
 import zhiwei from '../views/ljh/ZhiWei.vue'
 import employee from '../views/ljh/Employee.vue'
 import team from '../views/yyt/Team.vue'
+import leave from '../views/ljh/Leave.vue'
 
 Vue.use(Router)
 
@@ -22,6 +23,8 @@ export default new Router({
        {path: '/zhiwei',name: 'zhiwei',component: zhiwei},
        //组织机构
       {path: '/emp',name: 'emp',component: employee},
+      //组织机构
+      {path: '/lea',name: 'lea',component: leave},
         //技工班组
       {path: '/team',name: 'team',component: team},
       

@@ -146,7 +146,7 @@
               <el-menu-item index="6-1" @click="addTab('/emp')"
                 >职工列表</el-menu-item
               >
-              <el-menu-item index="6-2" @click="addTab(editableTabsValue)"
+              <el-menu-item index="6-2" @click="addTab('/lea')"
                 >离职登记</el-menu-item
               >
               <el-menu-item index="6-3" @click="addTab(editableTabsValue)"
