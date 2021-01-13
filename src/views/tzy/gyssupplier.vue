@@ -56,7 +56,7 @@
               
               <el-col :span="18">
                 <div class="grid-content bg-purple-dark">
-                  供应商名称：<el-input v-model="firm.firmname" placeholder="请输入供应商名称" style="width:290px"></el-input> 
+                  供应商名称：<el-input v-model="firm.firmname" placeholder="请输入供应商名称" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span> 
                 </div>
               </el-col>
               <el-col :span="4">&nbsp;</el-col>
@@ -66,7 +66,7 @@
                 
               <el-col :span="18">
                 <div class="grid-content bg-purple-dark">
-                  供应商地址：<el-input v-model="firm.faddress" placeholder="请输入供应商地址" style="width:290px"></el-input> 
+                  供应商地址：<el-input v-model="firm.faddress" placeholder="请输入供应商地址" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>  
                 </div>
               </el-col>
                <el-col :span="4">&nbsp;</el-col>
@@ -76,7 +76,7 @@
                
               <el-col :span="18">
                 <div class="grid-content bg-purple-dark">
-                  公司电话：<el-input v-model="firm.fphone" placeholder="请输入公司电话" style="width:290px"></el-input> 
+                  公司电话：<el-input v-model="firm.fphone" placeholder="请输入公司电话" style="width:290px"></el-input><span style="color:red;padding-left:15px;">&nbsp;</span>  
                 </div>
               </el-col>
                <el-col :span="4">&nbsp;</el-col>
@@ -85,7 +85,7 @@
              <el-row style="text-align:right;margin:15px;">
               <el-col :span="18">
                 <div class="grid-content bg-purple-dark">
-                  联系人：<el-input v-model="firm.lxr" placeholder="请输入联系人" style="width:290px"></el-input> 
+                  联系人：<el-input v-model="firm.lxr" placeholder="请输入联系人" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>  
                 </div>
               </el-col>
                <el-col :span="4">&nbsp;</el-col>
@@ -94,7 +94,7 @@
            <el-row style="text-align:right;margin:15px;">
               <el-col :span="18">
                 <div class="grid-content bg-purple-dark">
-                  联系人电话：<el-input v-model="firm.lphone" placeholder="请输入联系人电话" style="width:290px"></el-input> 
+                  联系人电话：<el-input v-model="firm.lphone" placeholder="请输入联系人电话" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span> 
                 </div>
               </el-col>
                <el-col :span="4">&nbsp;</el-col>
@@ -103,7 +103,7 @@
              <el-row style="text-align:right;margin:15px;">
               <el-col :span="18">
                 <div class="grid-content bg-purple-dark">
-                  备注：<el-input v-model="firm.fsevenst" placeholder="请输入备注" style="width:290px"></el-input> 
+                  备注：<el-input v-model="firm.fsevenst" placeholder="请输入备注" style="width:290px"></el-input><span style="color:red;padding-left:15px;">&nbsp;</span>  
                 </div>
               </el-col>
                <el-col :span="4">&nbsp;</el-col>
@@ -283,6 +283,34 @@ export default {
     add(){
        const axios = require("axios");
         let that = this;
+        if(this.firm.firmname == ""){
+           that.$message({
+              type: 'success',
+              message: '名称不能为空'
+            });
+           return; 
+        }
+        if(this.firm.faddress == ""){
+           that.$message({
+              type: 'success',
+              message: '地址不能为空'
+            });
+           return; 
+        }
+        if(this.firm.lxr == ""){
+           that.$message({
+              type: 'success',
+              message: '联系人姓名不能为空'
+            });
+           return; 
+        }
+         if(this.firm.lphone == ""){
+           that.$message({
+              type: 'success',
+              message: '联系人电话不能为空'
+            });
+           return; 
+        }
         axios
           .post("http://localhost:8080/dzw_sys/api/tzy/firm/addfirm",this.firm)
           .then(function (res) {

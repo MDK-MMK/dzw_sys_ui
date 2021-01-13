@@ -105,16 +105,25 @@
     <el-row  style="text-align:right;margin:15px;">
         <el-col :span="18">
         <div class="grid-content bg-purple-dark">
-           项目名称：<el-input v-model="addbaoy.shopname" placeholder="请输入保养项目名称" style="width:290px"></el-input> 
+           项目名称：<el-input v-model="addbaoy.shopname" placeholder="请输入保养项目名称" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>    
+        </div>
+        </el-col>
+        <el-col :span="4">&nbsp;</el-col>
+    </el-row>
+ 
+    <el-row style="text-align:right;margin:15px;">
+        <el-col :span="18">
+        <div class="grid-content bg-purple-dark">
+             保养价格：<el-input v-model="addbaoy.sellingprice" placeholder="请输入价格" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>    
         </div>
         </el-col>
         <el-col :span="4">&nbsp;</el-col>
     </el-row>
 
-        <el-row style="text-align:right;margin:15px;">
+    <el-row style="text-align:right;margin:15px;">
         <el-col :span="18">
         <div class="grid-content bg-purple-dark">
-             保养价格：<el-input v-model="addbaoy.sellingprice" placeholder="请输入价格" style="width:290px"></el-input> 
+            项目耗时：<el-input v-model="addbaoy.quantity" placeholder="请输入项目耗时" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>     
         </div>
         </el-col>
         <el-col :span="4">&nbsp;</el-col>
@@ -137,7 +146,7 @@
     <el-row  style="text-align:right;margin:15px;">
         <el-col :span="18">
         <div class="grid-content bg-purple-dark">
-            项目名称：<el-input v-model="addweix.shopname" placeholder="请输入保养项目名称" style="width:290px"></el-input> 
+            项目名称：<el-input v-model="addweix.shopname" placeholder="请输入保养项目名称" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>     
         </div>
         </el-col>
         <el-col :span="4">&nbsp;</el-col>
@@ -146,7 +155,7 @@
         <el-row style="text-align:right;margin:15px;">
         <el-col :span="18">
         <div class="grid-content bg-purple-dark">
-            项目价格：<el-input v-model="addweix.sellingprice" placeholder="请输入价格" style="width:290px"></el-input> 
+            项目价格：<el-input v-model="addweix.sellingprice" placeholder="请输入价格" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>     
         </div>
         </el-col>
         <el-col :span="4">&nbsp;</el-col>
@@ -155,7 +164,7 @@
      <el-row style="text-align:right;margin:15px;">
         <el-col :span="18">
         <div class="grid-content bg-purple-dark">
-            项目数量：<el-input v-model="addweix.quantity" placeholder="请输入数量" style="width:290px"></el-input> 
+            项目数量：<el-input v-model="addweix.quantity" placeholder="请输入数量" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>     
         </div>
         </el-col>
         <el-col :span="4">&nbsp;</el-col>
@@ -164,14 +173,14 @@
         <el-row style="text-align:right;margin:15px;">
         <el-col :span="18">
         <div class="grid-content bg-purple-dark">
-            供应商名称：<el-select v-model="ops" clearable placeholder="请选择" style="width:290px">
+            供应商名称：<el-select v-model="ops" clearable placeholder="请选择" style="width:290px">  
             <el-option
                 v-for="item in options"
                 :key="item.firmid"
                 :label="item.firmname"
                 :value="item.firmid">
             </el-option>
-            </el-select>
+            </el-select><span style="color:red;padding-left:15px;">*</span>     
         </div>
         </el-col>
         <el-col :span="4">&nbsp;</el-col>
@@ -231,7 +240,7 @@
         </el-col>
         <el-col :span="4">&nbsp;</el-col>
     </el-row>
-
+        
         <el-row style="text-align:right;margin:15px;">
         <el-col :span="18">
         <div class="grid-content bg-purple-dark">
@@ -286,24 +295,27 @@ export default {
             isShow: false,
             isShows: false,
             options:[],
+            ops:1,
              baoy: [],
              addbaoy:{
                  goodid:2,
                  shopname:'',
-                 sellingprice:''
+                 image:'1',
+                 sellingprice:'',
+                 quantity:''
 
              },
              xgbaoy:{
                  shopid:'',
                  shopname:'',
                  sellingprice:''
-
              },
              weix:[],
              addweix:{
                  goodid:3,
                  firmid:'',
                  shopname:'',
+                 image:1,
                  sellingprice:'',
                  quantity:''
              },
@@ -311,6 +323,7 @@ export default {
                  shopid:'',
                  firmid:'',
                  shopname:'',
+                 image:1,
                  sellingprice:'',
                  quantity:''
              },
@@ -422,6 +435,27 @@ export default {
             //axios
             const axios = require("axios");
             let that = this;
+            if(this.addbaoy.shopname == ""){
+            that.$message({
+                type: 'success',
+                message: '名称不能为空'
+              });
+            return; 
+            }
+             if(this.addbaoy.sellingprice == ""){
+            that.$message({
+                type: 'success',
+                message: '价格不能为空'
+              });
+            return; 
+            }
+            if(this.addbaoy.quantity == ""){
+            that.$message({
+                type: 'success',
+                message: '项目耗时不能为空'
+              });
+            return; 
+            }
             axios
               .post("http://localhost:8080/dzw_sys/api/tzy/shop/addshop",this.addbaoy)
               .then(function (res) {
@@ -448,6 +482,27 @@ export default {
             //axios
             const axios = require("axios");
             let that = this;
+             if(this.addweix.shopname == ""){
+                that.$message({
+                    type: 'success',
+                    message: '名称不能为空'
+                });
+                return; 
+            }
+            if(this.addweix.sellingprice == ""){
+                that.$message({
+                    type: 'success',
+                    message: '价格不能为空'
+                });
+                return; 
+            }
+            if(this.addweix.quantity == ""){
+                that.$message({
+                    type: 'success',
+                    message: '数量不能为空'
+                });
+                return; 
+            }
             axios
               .post("http://localhost:8080/dzw_sys/api/tzy/shop/addshop",this.addweix)
               .then(function (res) {

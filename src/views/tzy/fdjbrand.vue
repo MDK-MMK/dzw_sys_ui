@@ -16,7 +16,7 @@
         <el-col :span="6">
           <div class="grid-content bg-purple-dark">
               <el-row>
-                  <el-button icon="el-icon-search" @click="querycartypes()" circle></el-button>
+                  <el-button icon="el-icon-search" @click="querycartypes(1,size1)" circle></el-button>
                   <el-button @click="show = true">添加</el-button>
             </el-row>
           </div>
@@ -42,7 +42,7 @@
 
             <el-row>
               <el-button type="primary" icon="el-icon-edit" circle @click="carupdate(scope.row)"></el-button>
-              <el-button type="danger" icon="el-icon-delete" circle @click="del(scope.row.ctid)"></el-button>
+              <el-button type="danger" icon="el-icon-delete" circle @click="cldel(scope.row.ctid)"></el-button>
             </el-row>
             
           </template>
@@ -56,7 +56,7 @@
       </el-pagination>
     </el-col>
 
-<!-- 添加发动机 -->
+<!-- 添加车辆品牌 -->
      <div id="a">
 			<el-dialog  :visible.sync="show" title="添加车辆品牌" width="50%" center>
 				<div id="cnt" >
@@ -64,15 +64,15 @@
             <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  车辆品牌名称：<el-input v-model="cartype.ctname" placeholder="请输入车辆品牌名称" style="width:290px"></el-input> 
+                  车辆的名称：<el-input v-model="cartype.ctname" placeholder="请输入车辆的名称" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>   
                 </div>
               </el-col>
             </el-row>
-      
+             
             <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  车辆首字母：<el-input v-model="cartype.ctszm" placeholder="请输入车辆首字母" style="width:290px"></el-input> 
+                  车辆首字母：<el-input v-model="cartype.ctszm" placeholder="请输入车辆首字母" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>   
                 </div>
               </el-col>
             </el-row>
@@ -86,7 +86,7 @@
 			</el-dialog>
 
 	   </div>
-<!-- 修改模态框 -->
+<!-- 修改车辆品牌 -->
      <div id="a">
 			<el-dialog  :visible.sync="show1" title="修改车辆品牌" width="50%" center>
 				<div id="cnt" >
@@ -121,7 +121,7 @@
 
 
 
-    <el-col :span="12">
+  <el-col :span="12">
      <h2>发动机品牌</h2><br>
       <el-row>
         
@@ -135,7 +135,7 @@
         <el-col :span="6">
           <div class="grid-content bg-purple-dark">
               <el-row>
-                  <el-button icon="el-icon-search" @click="queryshop()" circle></el-button>
+                  <el-button icon="el-icon-search" @click="queryshop(1,size)" circle></el-button>
                   <el-button @click="isShow = true">添加</el-button>
             </el-row>
           </div>
@@ -183,7 +183,7 @@
             <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  发动机名称：<el-input v-model="shop.shopname" placeholder="请输入发动机名称" style="width:290px"></el-input> 
+                  发动机名称：<el-input v-model="shop.shopname" placeholder="请输入发动机名称" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>      
                 </div>
               </el-col>
             </el-row>
@@ -191,7 +191,7 @@
              <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  发动机价格：<el-input v-model="shop.sellingprice" placeholder="请输入发动机价格" style="width:290px"></el-input> 
+                  发动机价格：<el-input v-model="shop.sellingprice" placeholder="请输入发动机价格" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>      
                 </div>
               </el-col>
             </el-row>
@@ -208,7 +208,7 @@
                       :label="item.ctname"
                       :value="item.ctid">
                     </el-option>
-                  </el-select>
+                  </el-select><span style="color:red;padding-left:15px;">*</span>     
                 </div>
               </el-col>
             </el-row>
@@ -216,7 +216,7 @@
             <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  适合的车型：<el-input v-model="shop.numbering" placeholder="请输入适合的车型" style="width:290px"></el-input> 
+                  适合的车型：<el-input v-model="shop.numbering" placeholder="请输入适合的车型" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>      
                 </div>
               </el-col>
             </el-row>
@@ -224,7 +224,7 @@
              <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  发动机数量：<el-input v-model="shop.quantity" placeholder="请输入发动机数量" style="width:290px"></el-input> 
+                  发动机数量：<el-input v-model="shop.quantity" placeholder="请输入发动机数量" style="width:290px"></el-input><span style="color:red;padding-left:15px;">*</span>      
                 </div>
               </el-col>
             </el-row>
@@ -241,7 +241,7 @@
                       :label="item.firmname"
                       :value="item.firmid">
                     </el-option>
-                  </el-select>
+                  </el-select><span style="color:red;padding-left:15px;">*</span>     
                 </div>
               </el-col>
             </el-row>
@@ -280,7 +280,7 @@
              <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                   车辆的品牌：<el-select v-model="op" clearable placeholder="请选择" style="width:290px">
+                   车辆的品牌：<el-select v-model="xgshop.weight" clearable placeholder="请选择" style="width:290px">
                     <el-option
                       v-for="item in cartypeall"
                       :key="item.ctid"
@@ -313,7 +313,7 @@
              <el-row style="text-align:center;margin:15px;">
               <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                  供应商名称：<el-select v-model="ops" clearable placeholder="请选择" style="width:290px">
+                  供应商名称：<el-select v-model="xgshop.firmid" clearable placeholder="请选择" style="width:290px">
                     <el-option
                       v-for="item in options"
                       :key="item.firmid"
@@ -348,6 +348,8 @@
           isShow: false,
           isShows: false,
           input:'',
+          op:1,
+          ops:1,
           shops: [],
           cartype:{
             ctname:'',
@@ -361,13 +363,12 @@
           cartypes:[],
           cartypeall:[],
           options: [],
-          op:1,
-          ops:1,
           shopname:null,
           carname:null,
           shop:{
             firmid:'',
             shopname:'',
+            image:1,
             sellingprice:'',
             numbering:'',
             quantity:'',
@@ -394,9 +395,9 @@
         };
       },
       created(){  
-        this.queryshop();
+        this.queryshop(1,3);
         this.queryfirm(null,1,100);
-        this.querycartypes();
+        this.querycartypes(1,4);
         this.querycar();
       },
       methods:{
@@ -405,6 +406,21 @@
                //axios
             const axios = require("axios");
             let that = this;
+            if(this.cartype.ctname == ""){
+              that.$message({
+                  type: 'success',
+                  message: '名称不能为空'
+                });
+              return; 
+            }
+            if(this.cartype.ctszm == ""){
+              that.$message({
+                  type: 'success',
+                  message: '首字母不能为空'
+                });
+              return; 
+            }
+      
             axios
               .post("http://localhost:8080/dzw_sys/api/tzy/cartypes/addcar",this.cartype)
               .then(function (res) {
@@ -414,8 +430,7 @@
                       message: '添加成功'
                     });
                      that.show = false;
-                     that.querycartypes();
-                     window.location.reload();
+                     that.querycartypes(that.currentPage1,that.size1);
                  }else{
                     that.$message({
                       type: 'success',
@@ -444,7 +459,7 @@
                         message: '修改成功'
                       });
                       that.show1 = false;
-                      that.querycartypes();
+                      that.querycartypes(that.currentPage1,that.size1);
                   }else{
                       that.$message({
                         type: 'success',
@@ -455,13 +470,13 @@
                 });
           },
          //分页查询全部车辆品牌
-          querycartypes(){
+          querycartypes(currentPage1,size1){
             //axios
             const axios = require("axios");
             let that = this;
              if(this.carname==""){this.carname = null}
             axios
-              .get("http://localhost:8080/dzw_sys/api/tzy/cartypes/querycartypes/"+this.carname+"/"+this.currentPage1+"/"+this.size1)
+              .get("http://localhost:8080/dzw_sys/api/tzy/cartypes/querycartypes/"+this.carname+"/"+currentPage1+"/"+size1)
               .then(function (res) {
                   that.cartypes = res.data.list;
                   that.total1 = res.data.total;
@@ -471,12 +486,12 @@
           handleSizeChange1(val) {
             // console.log(`每页 ${val} 条`);
             this.size1 = val;
-            this.querycartypes(this.carname,this.currentPage1,this.size1);
+            this.querycartypes(this.currentPage1,this.size1);
           },
           handleCurrentChange1(val) {
             // console.log(`当前页: ${val}`);
             this.currentPage1 = val;
-             this.querycartypes(this.carname,this.currentPage1,this.size1);
+             this.querycartypes(this.currentPage1,this.size1);
           }, 
           //查询全部供应商
           queryfirm(firmname,p,s){
@@ -503,13 +518,14 @@
               });
           },
           //查询全部
-          queryshop() {
+          queryshop(currentPage,size) {
             //axios
+           
             const axios = require("axios");
             let that = this;
             if(this.shopname==""){this.shopname = null}
             axios
-              .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryshop/"+this.shopname+"/"+this.currentPage+"/"+this.size)
+              .get("http://localhost:8080/dzw_sys/api/tzy/shop/queryshop/"+this.shopname+"/"+currentPage+"/"+size)
               .then(function (res) {
                 that.shops = res.data.list;
                 that.total = res.data.total;
@@ -519,20 +535,46 @@
           handleSizeChange(val) {
             // console.log(`每页 ${val} 条`);
             this.size = val;
-            this.queryshop();
+            this.queryshop(this.currentPage,this.size);
           },
           handleCurrentChange(val) {
             // console.log(`当前页: ${val}`);
             this.currentPage = val;
-            this.queryshop();
+            this.queryshop(this.currentPage,this.size);
           },
           //添加发动机
           add(){
-            this.shop.firmid = this.ops
-            this.shop.weight = this.op
             //axios
             const axios = require("axios");
             let that = this;
+            if(this.shop.shopname == ""){
+            that.$message({
+                type: 'success',
+                message: '名称不能为空'
+              });
+            return; 
+            }
+            if(this.shop.sellingprice == ""){
+              that.$message({
+                  type: 'success',
+                  message: '发动机价格不能为空'
+                });
+              return; 
+            }
+            if(this.shop.numbering == ""){
+              that.$message({
+                  type: 'success',
+                  message: '车型不能为空'
+                });
+              return; 
+            }
+             if(this.shop.quantity == ""){
+              that.$message({
+                  type: 'success',
+                  message: '数量不能为空'
+                });
+              return; 
+            }
             axios
               .post("http://localhost:8080/dzw_sys/api/tzy/shop/addshop",this.shop)
               .then(function (res) {
@@ -542,8 +584,7 @@
                       message: '添加成功'
                     });
                      that.isShow = false;
-                     that.queryshop();
-                     window.location.reload();
+                    that.queryshop(that.currentPage,that.size1);
                  }else{
                     that.$message({
                       type: 'success',
@@ -555,15 +596,15 @@
           },//修改发动机
           update(xg){
               this.isShows = true;
+              this.ops = xg.firmid;
+              this.op = xg.weight;
               this.xgshop.shopname = xg.shopname;
               this.xgshop.sellingprice = xg.sellingprice;
               this.xgshop.numbering = xg.numbering;
               this.xgshop.quantity = xg.quantity;
               this.xgshop.shopid = xg.shopid;
-              this.op = xg.firmid;
-              this.ops = xg.weight;
-              this.xgshop.firmid = this.op;
-              this.xgshop.weight = this.ops;
+              this.xgshop.firmid = this.ops;
+              this.xgshop.weight = this.op;
             
           },queding(){
               //axios
@@ -578,7 +619,7 @@
                         message: '修改成功'
                       });
                       that.isShows = false;
-                      that.queryshop();
+                      that.queryshop(that.currentPage,that.size1);
                   }else{
                       that.$message({
                         type: 'success',
@@ -587,6 +628,27 @@
                   }
                     
                 });
+          },         
+          //删除车辆品牌
+          cldel(ctid){
+            const axios = require("axios");
+            let that = this;
+            axios
+            .get("http://localhost:8080/dzw_sys/api/tzy/cartypes/delcar/"+ctid)
+            .then(function (res) {
+                if(res.data>0){
+                  that.$message({
+                      type: 'success',
+                      message: '删除成功'
+                    });
+                    that.querycartypes(that.currentPage1,that.size1);
+                }else{
+                  that.$message({
+                      type: 'success',
+                      message: '删除失败'
+                    });
+                }
+            });
           },         
           //删除发动机 
           del(shopid){
@@ -600,7 +662,7 @@
                       type: 'success',
                       message: '删除成功'
                     });
-                  that.queryshop();
+                  that.queryshop(that.currentPage,that.size1);
                 }else{
                   that.$message({
                       type: 'success',
