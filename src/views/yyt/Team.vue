@@ -194,6 +194,17 @@
         <el-form-item label="班组名称：" prop="tname">
           <el-input v-model="teama.tname" clearable></el-input>
         </el-form-item>
+        <el-form-item label="班组星级：" prop="sid">
+          <el-select v-model="teama.sid" placeholder="请选择">
+            <el-option
+              v-for="(item, i) in Starsoptions"
+              :key="i"
+              :label="item.starts"
+              :value="item.sid"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button
             type="primary"
@@ -217,6 +228,17 @@
       >
         <el-form-item label="班组名称：" prop="tname">
           <el-input v-model="teamaa.tname" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="班组星级：" prop="sid">
+          <el-select v-model="teamaa.sid" placeholder="请选择">
+            <el-option
+              v-for="(item, i) in Starsoptions"
+              :key="i"
+              :label="item.starts"
+              :value="item.sid"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button
@@ -435,11 +457,11 @@ export default {
     return {
       team: [],
       tableData: [],
-      artisan: { sid: "", zid: "", aphone: "", aname: "", tid: 0 },
+      artisan: { sid: "", zid: "", aphone: "", aname: "", tid: 0},
       Stars: { starts: "" }, //条件查询
       Starsoptions: [], //星级
-      teama: { tname: "", tid: 0 }, //新增
-      teamaa: { tname: "", tid: 0 }, //修改
+      teama: { tname: "", tid: 0 ,sid:1}, //新增
+      teamaa: { tname: "", tid: 0 ,sid:1,tzhuant:0}, //修改
       dialogVisibleTeam: false,
       dialogVisibleTeamI: false,
       transitions: false,
@@ -468,6 +490,7 @@ export default {
         acaid: "",
         acraft: "",
         arzday: "",
+        azt:0
       }, //技工
       rules: {
         aphone: [{ validator: validateAphone, trigger: "blur" }],
@@ -522,13 +545,14 @@ export default {
               type: "success",
             });
             that.resetForm("Artisan");
-            that.selectArtisanAll(that.size, 1);
+            
           } else if(res.data==0) {
             that.$message.error("移除失败!");
           }else{
             that.$message.error("当前技工正在维修!");
           }
         });
+        this.selectArtisanAll(this.size, 1);
     },
     //查询当前班组是否有组长
     chaxunzz(tid) {
@@ -667,6 +691,13 @@ export default {
         });
         return;
       }
+      if (this.teama.tzhuant == 1) {
+        this.$message({
+          message: "当前班组正在作业!",
+          type: "warning",
+        });
+        return;
+      }
       if(this.tableData.length!=0){
         this.$message({
           message: '当前班组，已有技工不可移除',
@@ -770,6 +801,8 @@ export default {
       //console.log(row);
       this.teama.tid = row.tid;
       this.teama.tname = row.tname;
+      this.teama.sid=row.sid;
+      this.teama.tzhuant=row.tzhuant;
       this.artisan.tid = row.tid;
       //console.log(this.teama);
       this.transitions = true;

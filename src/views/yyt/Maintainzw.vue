@@ -2,11 +2,13 @@
   <el-row :gutter="12">
     <el-col :span="24">
       <el-card shadow="always">
-        <el-page-header @back="goBack" content="添加维修页面"> </el-page-header>
-        <el-radio-group v-model="radio">
-          <el-radio-button label="站内维修"></el-radio-button>
-          <el-radio-button label="站外维修"></el-radio-button>
-        </el-radio-group>
+        <el-divider content-position="left">
+          <el-radio-group v-model="radio" @change="zw">
+            <el-radio-button label="站内维修"></el-radio-button>
+            <el-radio-button label="站外维修"></el-radio-button>
+          </el-radio-group>
+        </el-divider>
+
         <el-form
           :model="inststion"
           status-icon
@@ -25,9 +27,13 @@
               ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col v-show="radio == '站外维修'" :span="8">
             <el-form-item label="救援车辆" prop="wid">
-              <el-select v-model="inststion.wid" placeholder="请选择">
+              <el-select
+                @change="chaxunjiuyxg"
+                v-model="inststion.wid"
+                placeholder="请选择"
+              >
                 <el-option
                   v-for="item in workcaroptions"
                   :key="item.value"
@@ -39,7 +45,7 @@
             </el-form-item>
           </el-col>
           <el-col v-show="radio == '站外维修'" :span="8">
-            <el-form-item label="接车地址">
+            <el-form-item label="接车地址" prop="zd">
               <el-input
                 style="width: 220px"
                 placeholder="请输入地址"
@@ -65,7 +71,11 @@
 
           <el-col :span="8">
             <el-form-item label="维修班组" prop="tid">
-              <el-select v-model="inststion.tid" placeholder="请选择">
+              <el-select
+                @change="wxbanz"
+                v-model="inststion.tid"
+                placeholder="请选择"
+              >
                 <el-option
                   v-for="item in teamoptions"
                   :key="item.value"
@@ -114,7 +124,7 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col v-show="radio == '站外维修'" :span="8">
             <el-form-item label="接车时间" prop="jcday">
               <el-date-picker
                 v-model="inststion.jcday"
@@ -152,22 +162,18 @@
           </el-col>
 
           <el-table :data="tableData" style="width: 100%">
-            <el-table-column label="商品编号" prop="shopid"> </el-table-column>
+            <el-table-column label="编号" type="index" width="100px">
+            </el-table-column>
+            <el-table-column v-if="false" label="商品编号" prop="shopid">
+            </el-table-column>
             <el-table-column label="维修项目名" prop="shopname">
             </el-table-column>
             <el-table-column label="维修价格" prop="sellingprice">
             </el-table-column>
-            <el-table-column v-if="false" label="qq" prop="image">
-            </el-table-column>
-            <el-table-column label="使用数量" prop="quantity">
+            <el-table-column v-if="false" prop="image"> </el-table-column>
+            <el-table-column label="耗时" prop="quantity">
               <template slot-scope="scope">
-                <el-input-number
-                  v-show="scope.row.quantity!=0"
-                  v-model="scope.row.image"
-                  :min="1"
-                  :max="scope.row.quantity"
-                  label="描述文字"
-                ></el-input-number>
+                <p>{{ scope.row.quantity }}/h</p>
               </template>
             </el-table-column>
             <el-table-column align="right">
@@ -177,7 +183,13 @@
                 >
               </template>
               <template slot-scope="scope">
-                <el-button type="danger" @click="byyc(scope.$index,scope.row)" plain>移除</el-button>
+                <el-button
+                  v-if="scope.row.shopid != null"
+                  type="danger"
+                  @click="byyc(scope.$index, scope.row)"
+                  plain
+                  >移除</el-button
+                >
               </template>
             </el-table-column>
           </el-table>
@@ -187,6 +199,8 @@
           <el-table :data="tableData1" style="width: 100%">
             <el-table-column label="编号" type="index" width="100px">
             </el-table-column>
+            <el-table-column v-if="false" label="商品编号" prop="shopid">
+            </el-table-column>
             <el-table-column label="维修材料名" prop="shopname">
             </el-table-column>
             <el-table-column label="维修材料价格" prop="sellingprice">
@@ -194,30 +208,47 @@
             <el-table-column label="使用数量" prop="quantity">
               <template slot-scope="scope">
                 <el-input-number
-                  v-model="scope.row.quantity"
+                  @change="jisuanjaig"
+                  v-model="scope.row.image"
                   :min="1"
-                  :max="100"
+                  :max="scope.row.quantity"
                   label="描述文字"
                 ></el-input-number>
               </template>
             </el-table-column>
             <el-table-column align="right">
               <template slot="header">
-                <el-button type="success" plain>添加维修材料</el-button>
+                <el-button type="success" plain @click="dialogVisible2 = true"
+                  >添加维修材料</el-button
+                >
               </template>
-              <template>
-                <el-button type="danger" plain>移除</el-button>
+              <template slot-scope="scope">
+                <el-button
+                  type="danger"
+                  plain
+                  @click="clyc(scope.row, scope.$index)"
+                  >移除</el-button
+                >
               </template>
             </el-table-column>
           </el-table>
-
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('inststion')"
-              >提交</el-button
-            >
-          </el-form-item>
+          <el-col :span="24">
+            <el-form-item style="margin-top: 2%; margin-right: -70%">
+              <p style="display: inline-block; color: red">
+                预计总金额: {{ zongjine }}.0元
+              </p>
+              <el-button
+                :disabled="tijiao"
+                style="margin-left: 60px"
+                type="danger"
+                @click="submitForm('inststion')"
+                >提交</el-button
+              >
+            </el-form-item>
+          </el-col>
         </el-form>
 
+        <!-- 保养项目 -->
         <el-dialog
           title="维修项目"
           :visible.sync="dialogVisible1"
@@ -230,6 +261,50 @@
             @selection-change="handleSelectionChange"
             :row-key="getRowKey"
             ref="dataTable"
+          >
+            <el-table-column label="商品编号" prop="shopid"> </el-table-column>
+            <el-table-column label="维修项目名" prop="shopname">
+            </el-table-column>
+            <el-table-column label="维修价格" prop="sellingprice">
+            </el-table-column>
+            <el-table-column label="耗时" prop="quantity"> </el-table-column>
+            <el-table-column
+              type="selection"
+              :reserve-selection="true"
+              width="55"
+            >
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            @size-change="handleSizeChange1"
+            @current-change="handleCurrentChange1"
+            :current-page="currentPage1"
+            :page-sizes="[4, 6, 8, 10]"
+            :page-size="size1"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total1"
+          >
+          </el-pagination>
+          <span slot="footer" class="dialog-footer">
+            <el-badge :value="bynum" class="item">
+              <el-button type="primary" plain @click="byqr">确认</el-button>
+            </el-badge>
+          </span>
+        </el-dialog>
+
+        <!-- 维修材料 -->
+        <el-dialog
+          title="维修材料"
+          :visible.sync="dialogVisible2"
+          width="50%"
+          :before-close="handleClose"
+        >
+          <el-table
+            :data="cltableData"
+            style="width: 100%"
+            @selection-change="handleSelectionChange2"
+            :row-key="getRowKey2"
+            ref="dataTable2"
           >
             <el-table-column label="商品编号" prop="shopid"> </el-table-column>
             <el-table-column label="维修项目名" prop="shopname">
@@ -250,20 +325,18 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            @size-change="handleSizeChange1"
-            @current-change="handleCurrentChange1"
-            :current-page="currentPage1"
+            @size-change="handleSizeChange2"
+            @current-change="handleCurrentChange2"
+            :current-page="currentPage2"
             :page-sizes="[4, 6, 8, 10]"
-            :page-size="size1"
+            :page-size="size2"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="total1"
+            :total="total2"
           >
           </el-pagination>
           <span slot="footer" class="dialog-footer">
-            <el-badge :value="bynum" class="item">
-              <el-button type="primary" plain @click="byqr"
-                >确认</el-button
-              >
+            <el-badge :value="clnum" class="item">
+              <el-button type="primary" plain @click="clqr">确认</el-button>
             </el-badge>
           </span>
         </el-dialog>
@@ -277,33 +350,71 @@
 const axios = require("axios");
 export default {
   data() {
+    //验证接车地址
+    var validateZd = (rule, value, callback) => {
+      if (this.zd === "" && this.radio === "站外维修") {
+        callback(new Error("请输入接车地址!"));
+      } else {
+        callback();
+      }
+    };
+    //验证预计完工时间
+    var validateYjday = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请选择预计完工时间!"));
+      } else {
+        callback();
+      }
+    };
+    //接车时间
+    var validateJcday = (rule, value, callback) => {
+      if (value === "" && this.radio == "站外维修") {
+        callback(new Error("请选择接车时间!"));
+      } else {
+        callback();
+      }
+    };
     return {
       zd: "", //重点
       map: "",
       localSearch: "",
       inststion: {
-        inid: 0,
-        wid: 0,
-        tid: 0,
-        cno: "",
-        izt: 0,
-        jcday: "",
-        jdate: "",
-        yjday: "",
-        iszn: 0,
-        lc: "",
-        insevent: "",
+        inid: 0, //维修编号
+        wid: 0, //救援车辆
+        tid: 0, //班组id
+        cno: "", //客户车牌号
+        izt: 0, //维修状态
+        jcday: "", //接车时间
+        jdate: "", //进厂日期
+        yjday: "", //预计完工时间
+        iszn: 0, //是否站内
+        lc: "", //里程数
+        insevent: "", //维修备注
       },
       workcar: { caid: "", czt: "0" }, //救援车辆
-      rules: {},
-      tableData1: [], //维修材料
+      rules: {
+        zd: [{ validator: validateZd, trigger: "blur" }],
+        yjday: [{ validator: validateYjday, trigger: "blur" }],
+        jcday: [{ validator: validateJcday, trigger: "blur" }],
+      },
       teamoptions: [], //班组
       workcaroptions: [], //救援车辆
       clioptions: [], //用户
       caroptions: [], //客户车辆
       radio: "站外维修",
       xm: "", //客户姓名
+      zongjine: 0,
+      tijiao: false,
+
+      //材料
       dialogVisible2: false, //维修材料
+      tableData1: [], //维修材料
+      currentPage2: 1, //当前页数   保养
+      size2: 4, //每页大小          保养
+      total2: 0, //总条数           保养
+      cltableData: [], //材料
+      clnum: 0, //材料  确认数量
+      cltable: [],
 
       //保养
       tableData: [], //保养项目
@@ -313,7 +424,7 @@ export default {
       size1: 4, //每页大小          保养
       total1: 0, //总条数           保养
       bynum: 0, //保养  确认数量
-      bytable:[],
+      bytable: [],
     };
   },
   mounted() {
@@ -323,35 +434,360 @@ export default {
     this.chaxunweix(); //查询维修项目
     this.chaxunbaoyang(4, 1); //查询保养项目
     this.chaxunclient(); //查询用户
+    this.chaxuncailiao(1, 4); //查询材料
+    this.chaxunID(); //查询id
   },
   methods: {
+    //提交
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // if (this.tableData.length == 2) {
+          //   this.$message({
+          //     message: "请选择维修项目！",
+          //     type: "warning",
+          //   });
+          //   return;
+          // }
+          if (this.tableData1.length == 0) {
+            this.$message({
+              message: "请选择维修材料！",
+              type: "warning",
+            });
+            return;
+          }
+          if (this.inststion.lc == 0 && this.radio == "站外维修") {
+            this.$message({
+              message: "请确认接车地址！",
+              type: "warning",
+            });
+            return;
+          }
+          let that = this;
+          if (this.radio == "站外维修") {
+            this.inststion.inid = parseInt(this.inststion.inid);
+            this.inststion.izt = 1;
+            var a = [];
+            this.tableData.forEach((temp) => {
+              a.push({
+                xqid: 0,
+                inid: this.inststion.inid,
+                xqname: temp.shopname,
+                xqsl: temp.quantity,
+                spid: 1,
+                zt: temp.sellingprice,
+                xmoney: temp.sellingprice * temp.quantity,
+              });
+            });
+            var b = [];
+            this.tableData1.forEach((temp) => {
+              a.push({
+                xqid: 0,
+                inid: this.inststion.inid,
+                xqname: temp.shopname,
+                xqsl: temp.image,
+                spid: 2,
+                zt: temp.sellingprice,
+                xmoney: temp.sellingprice * temp.image,
+              });
+              b.push({
+                shopid: temp.shopid,
+                quantity: temp.quantity - temp.image,
+              });
+            });
+            console.log(b);
+            console.log(a);
+            axios
+              .post(
+                "http://127.0.0.1:8080/dzw_sys/api/Wei/insert",
+                this.inststion
+              )
+              .then((res) => {
+                //console.log(res.data);
+                axios
+                  .post("http://127.0.0.1:8080/dzw_sys/api/Wxxqs/insert", a)
+                  .then((resp) => {
+                    //console.log(resp.data);
+                    if (resp.data != 0 && res.data != 0) {
+                      that.$message({
+                        message: "添加成功",
+                        type: "success",
+                      });
+                    } else {
+                      that.$message.error("添加失败！");
+                    }
+                  });
+                axios
+                  .post("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update", b)
+                  .then((ress) => {
+                    //console.log(ress.data);
+                  });
+              });
+          } else {
+            //站内
 
-     getRowKey (row) {
+            this.inststion.inid = parseInt(this.inststion.inid);
+            this.inststion.izt = 0;
+            this.inststion.jdate = "";
+            var a = [];
+            this.tableData.forEach((temp) => {
+              a.push({
+                xqid: 0,
+                inid: this.inststion.inid,
+                xqname: temp.shopname,
+                xqsl: temp.quantity,
+                spid: 1,
+                zt: temp.sellingprice,
+                xmoney: temp.sellingprice * temp.quantity,
+              });
+            });
+            var b = [];
+            this.tableData1.forEach((temp) => {
+              a.push({
+                xqid: 0,
+                inid: this.inststion.inid,
+                xqname: temp.shopname,
+                xqsl: temp.image,
+                spid: 2,
+                zt: temp.sellingprice,
+                xmoney: temp.sellingprice * temp.image,
+              });
+              b.push({
+                shopid: temp.shopid,
+                quantity: temp.quantity - temp.image,
+              });
+            });
+            console.log(b);
+            console.log(a);
+            axios
+              .post(
+                "http://127.0.0.1:8080/dzw_sys/api/Wei/insert",
+                this.inststion
+              )
+              .then((res) => {
+                //console.log(res.data);
+                axios
+                  .post("http://127.0.0.1:8080/dzw_sys/api/Wxxqs/insert", a)
+                  .then((resp) => {
+                    //console.log(resp.data);
+                    if (resp.data != 0 && res.data != 0) {
+                      that.$message({
+                        message: "添加成功",
+                        type: "success",
+                      });
+                    } else {
+                      that.$message.error("添加失败！");
+                    }
+                  });
+                axios
+                  .post("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update", b)
+                  .then((ress) => {
+                    //console.log(ress.data);
+                  });
+              });
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    //计算总金额
+    jisuanjaig() {
+      var xm = 0;
+      this.tableData.forEach((temp) => {
+        xm += temp.sellingprice;
+        //console.log(temp.sellingprice);
+      });
+      //console.log(xm);
+      var cl = 0;
+      this.tableData1.forEach((temp) => {
+        cl += temp.sellingprice * temp.image;
+      });
+      //console.log(cl);
+      this.zongjine = cl + xm;
+    },
+    //切换救援车辆
+    chaxunjiuyxg() {
+      this.workcaroptions.forEach((temp) => {
+        if (temp.wid == this.inststion.wid) {
+          //console.log(temp);
+          var a = 0;
+          if (this.inststion.lc != 0) {
+            if (this.inststion.lc > 10) {
+              a = (this.inststion.lc - 1) * temp.ccj + temp.qbj;
+            } else {
+              a = (this.inststion.lc - 1) * (temp.ccj / 2) + temp.qbj;
+            }
+          } else {
+            a = temp.qbj;
+          }
+          this.$set(this.tableData, 0, {
+            shopname: "救援费",
+            sellingprice: a,
+            quantity: "1",
+          });
+          this.jisuanjaig();
+        }
+      });
+    },
+    //查询救援费用
+    chaxunjiuy() {
+      this.workcaroptions.forEach((temp) => {
+        if (temp.wid == this.inststion.wid) {
+          //console.log(temp);
+          var a = 0;
+          if (this.inststion.lc != 0) {
+            if (this.inststion.lc > 10) {
+              a = (this.inststion.lc - 1) * temp.ccj + temp.qbj;
+            } else {
+              a = (this.inststion.lc - 1) * (temp.ccj / 2) + temp.qbj;
+            }
+          } else {
+            a = temp.qbj;
+          }
+          this.tableData.splice(0, 0, {
+            shopname: "救援费",
+            sellingprice: a,
+            quantity: "1",
+          });
+        }
+      });
+    },
+    //切换班组
+    wxbanz() {
+      let that = this;
+      this.teamoptions.forEach((temp) => {
+        if (this.inststion.tid == temp.tid) {
+          axios
+            .get("http://127.0.0.1:8080/dzw_sys/api/Starss/ByID/" + temp.sid)
+            .then((res) => {
+              console.log(res.data);
+              for (var i = 0; i < that.tableData.length; i++) {
+                if (that.tableData[i].shopname == "班组费") {
+                  that.$set(that.tableData, i, {
+                    shopname: "班组费",
+                    sellingprice: res.data.xmoney,
+                    quantity: "1",
+                  });
+                  that.jisuanjaig();
+                }
+              }
+            });
+        }
+      });
+      this.jisuanjaig();
+    },
+    //切换站内站外
+    zw() {
+      if (this.radio == "站外维修") {
+        this.chaxunjiuy();
+      } else {
+        this.tableData.splice(0, 1);
+      }
+      this.jisuanjaig();
+    },
+    //判断站内站外价格
+    jg() {
+      let that = this;
+      this.teamoptions.forEach((temp) => {
+        if (this.inststion.tid == temp.tid) {
+          axios
+            .get("http://127.0.0.1:8080/dzw_sys/api/Starss/ByID/" + temp.sid)
+            .then((res) => {
+              //console.log(res.data);
+              that.tableData.splice(0, 0, {
+                shopname: "班组费",
+                sellingprice: res.data.xmoney,
+                quantity: "1",
+              });
+              if (that.radio == "站外维修") {
+                that.zw();
+              }
+
+              that.jisuanjaig();
+            });
+        }
+      });
+    },
+    //材料
+    getRowKey2(row) {
+      return row.shopid;
+    },
+    //移除材料
+    clyc(row, index) {
+      //  console.log(index);
+      this.tableData1.splice(index, 1);
+      // console.log(this.tableData);
+      //this.bytable.splice(index,1);
+      this.$nextTick(() => {
+        this.$refs.dataTable2.toggleRowSelection(row, false);
+      });
+      this.jisuanjaig();
+    },
+    handleSelectionChange2(val) {
+      this.clnum = val.length;
+      this.cltable = val;
+    },
+    //确认按钮
+    clqr() {
+      this.tableData1 = this.cltable;
+      this.dialogVisible2 = false;
+      this.jisuanjaig();
+    },
+    //查询材料
+    chaxuncailiao(size2, currentPage2) {
+      let that = this;
+      axios
+        .get(
+          "http://127.0.0.1:8080/dzw_sys/api/tzy/shop/queryAA/" +
+            size2 +
+            "/" +
+            currentPage2
+        )
+        .then(function (res) {
+          that.cltableData = res.data.list;
+          // console.log(res.data.list);
+          that.total2 = res.data.total;
+        });
+    },
+    //分页  材料
+    handleSizeChange2(val) {
+      // console.log(`每页 ${val} 条`);
+      this.size2 = val;
+      this.chaxuncailiao(this.currentPage2, this.size2);
+    },
+    handleCurrentChange2(val) {
+      // console.log(`当前页: ${val}`);
+      this.currentPage2 = val;
+      this.chaxuncailiao(this.currentPage2, this.size2);
+    },
+    //保养
+    getRowKey(row) {
       return row.shopid;
     },
     //保养移除
-    byyc(index,row){
-        console.log(index);
-        this.tableData.splice(index,1);
-        console.log(this.tableData);
-        //this.bytable.splice(index,1);
-        this.$nextTick(() => {
-        this.$refs.dataTable.toggleRowSelection(row,false);
+    byyc(index, row) {
+      //console.log(index);
+      this.tableData.splice(index, 1);
+      //console.log(this.tableData);
+      //this.bytable.splice(index,1);
+      this.$nextTick(() => {
+        this.$refs.dataTable.toggleRowSelection(row, false);
       });
-        
+      this.jisuanjaig();
     },
     //保养项目确认
-    byqr(){
-      this.tableData=this.bytable;
-      this.dialogVisible1=false;
-      console.log(this.tableData);
+    byqr() {
+      this.tableData = this.bytable;
+      this.jg();
+      this.dialogVisible1 = false;
+      this.jisuanjaig();
     },
     // 选中的保养项目
     handleSelectionChange(val) {
-      //console.log(val);
-      //console.log(val.length);
       this.bynum = val.length;
-      this.bytable=val;
+      this.bytable = val;
     },
     //分页  保养
     handleSizeChange1(val) {
@@ -435,6 +871,10 @@ export default {
           that.workcaroptions = res.data.list;
           if (res.data.list.length != 0) {
             that.inststion.wid = res.data.list[0].wid;
+            //that.chaxunjiuy();
+          } else {
+            that.tijiao = true;
+            that.$message.error("已没有空闲的救援车辆，不可开单！");
           }
         });
     },
@@ -442,12 +882,25 @@ export default {
     chaxunTeam() {
       const axios = require("axios");
       let that = this;
-      axios.get("http://localhost:8080/dzw_sys/api/Teams").then(function (res) {
-        //console.log(res.data);
-        that.teamoptions = res.data;
-        if (res.data.length != 0) {
-          that.inststion.tid = res.data[0].tid;
-        }
+      axios
+        .get("http://localhost:8080/dzw_sys/api/Teams/ByZt")
+        .then(function (res) {
+          //console.log(res.data);
+          that.teamoptions = res.data;
+          if (res.data.length != 0) {
+            that.inststion.tid = res.data[0].tid;
+            that.jg();
+          } else {
+            that.tijiao = true;
+            that.$message.error("已没有空闲的班组，不可开单！");
+          }
+        });
+    },
+    //生成ID
+    chaxunID() {
+      let that = this;
+      axios.get("http://127.0.0.1:8080/dzw_sys/api/Wei/ID").then((res) => {
+        that.inststion.inid = res.data;
       });
     },
     //返回
@@ -469,6 +922,7 @@ export default {
           message: "请输入接车地址！",
           type: "warning",
         });
+        return;
       }
       var keyword = this.zd;
       let that = this;
@@ -498,7 +952,27 @@ export default {
           that.map.addOverlay(lab3);
           var a = BMapLib.GeoUtils.getDistance(myP1, myP3);
           console.log("距离：" + a);
-          that.inststion.lc = (a / 1000).toFixed(1);
+          that.inststion.lc = (a / 1000).toFixed(0);
+
+          that.workcaroptions.forEach((temp) => {
+            if (temp.wid == that.inststion.wid) {
+              if (that.inststion.lc != 0) {
+                if (that.inststion.lc > 10) {
+                  a = (that.inststion.lc - 1) * temp.ccj + temp.qbj;
+                } else {
+                  a = (that.inststion.lc - 1) * (temp.ccj / 2) + temp.qbj;
+                }
+              } else {
+                a = temp.qbj;
+              }
+              that.$set(that.tableData, 0, {
+                shopname: "救援费",
+                sellingprice: a,
+                quantity: "1",
+              });
+            }
+          });
+
           setTimeout(function () {
             that.map.setViewport([myP1, myP3]); //调整到最佳视野
           }, 1000);
@@ -519,10 +993,5 @@ export default {
 }
 .el-page-header {
   margin-bottom: 20px;
-}
-.el-radio-group {
-  position: absolute;
-  right: 2%;
-  top: 1%;
 }
 </style>

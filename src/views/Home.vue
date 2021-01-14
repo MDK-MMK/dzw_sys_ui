@@ -130,7 +130,7 @@
               <el-menu-item index="6-2" @click="addTab(editableTabsValue)"
                 >完工结算</el-menu-item
               >
-              <el-menu-item index="6-3" @click="addTab('WeiXBilling.html')"
+              <el-menu-item index="6-3" @click="addTab('/Maintainzw')"
                 >维修开单</el-menu-item
               >
             </el-menu-item-group>
