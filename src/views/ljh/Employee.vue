@@ -93,6 +93,7 @@
                 </el-table-column>
               </el-table>
               <el-pagination
+              style="margin-top:10px;"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
@@ -404,7 +405,7 @@ export default {
     resetForm(formName) {
       let that = this;
       if (this.emp.zid !== 0) {
-        that.emp.ename = "";
+        this.clearEmp();
       } else {
         this.$refs[formName].resetFields();
       }
@@ -425,7 +426,7 @@ export default {
       this.emp.elaimes=row.elaimes;
       this.emp.zid=row.zid;
       this.emp.eyunayin=row.eyunayin;
-      console.log(row);
+      //console.log(row);
     },
     //清空emp对象
     clearEmp(){

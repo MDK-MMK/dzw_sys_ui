@@ -16,8 +16,7 @@
               </el-col>
               <el-col :xs="5" :sm="5" :md="5" :lg="2" :xl="5">
                 <el-button type="primary" @click="selectAlls(size, 1)"
-                  >搜索</el-button
-                >
+                  >搜索</el-button>
               </el-col>
               <el-col :xs="5" :sm="5" :md="5" :lg="2" :xl="5">
                 <el-button
@@ -32,6 +31,7 @@
                   >复职</el-button>
               </el-col>
             </el-row>
+            <el-divider></el-divider>
             <el-col :xs="4" :sm="6" :md="19" :lg="24" :xl="11">
               <el-table
                 :header-cell-style="{ 'text-align': 'center' }"
@@ -72,6 +72,7 @@
                 </el-table-column>
               </el-table>
               <el-pagination
+              style="margin-top:10px;"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
@@ -238,10 +239,13 @@ export default {
       let that = this;
       that.emp.deid = deid;
       that.emp.ezuant = "0";
+      that.emp.ephone="";
+      that.selEmp=[];
       const axios = require("axios");
       axios
         .post("http://localhost:8080/dzw_sys/api/Emp/all/100/1",that.emp)
         .then(function (res) {
+
           //console.log(res.data);
           that.selEmp = res.data.list;
           that.total = res.data.total;
@@ -395,12 +399,6 @@ export default {
 .input-show {
   width: 40%;
   margin-left: 40%;
-  margin-bottom: 2%;
-}
-.tag {
-  position: absolute;
-  margin-top: -50px;
-  margin-left: -90px;
 }
 .from-emp {
   padding-right: 20px;
