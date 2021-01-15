@@ -10,7 +10,11 @@ import employee from '../views/ljh/Employee.vue'
 import team from '../views/yyt/Team.vue'
 import leave from '../views/ljh/Leave.vue'
 import maintain from '../views/ljh/Maintain.vue'
+import fdjbrand from '../views/tzy/fdjbrand.vue'
+import gyssupplier from '../views/tzy/gyssupplier.vue'
+import weixiuitems from '../views/tzy/weixiuitems.vue'
 import Maintainzw from '../views/yyt/Maintainzw.vue'
+
 
 
 Vue.use(Router)
@@ -31,8 +35,17 @@ export default new Router({
       {path: '/lea',name: 'lea',component: leave},
         //技工班组
       {path: '/team',name: 'team',component: team},
+
       //组织机构
       {path: '/maintain',name: 'maintain',component: maintain},
+       //发动机品牌
+      {path: '/fdjbrand',name: 'fdjbrand',component: fdjbrand},
+       //供应商管理
+      {path: '/gyssupplier',name: 'gyssupplier',component: gyssupplier},
+       //维修项目管理
+       {path: '/weixiuitems',name: 'weixiuitems',component: weixiuitems},
+    //注册
+    {path: '/register',name: 'register',component: register},
       //外勤车辆
       {path: '/workcar',name: 'workcar',component: workcar},
        //站外接车
@@ -40,5 +53,6 @@ export default new Router({
     ]},
     //注册
     {path: '/register',name: 'register',component: register},
+
   ]
 })

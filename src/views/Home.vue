@@ -29,11 +29,11 @@
               <span>首页</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1" @click="addTab('/as')"
+              <el-menu-item index="1-1" @click="addTab('/gyssupplier')"
                 >供货单位</el-menu-item
               >
-              <el-menu-item index="1-2" @click="addTab('/ass')"
-                >维系项目</el-menu-item
+              <el-menu-item index="1-2" @click="addTab('/weixiuitems')"
+                >维修项目</el-menu-item
               >
             </el-menu-item-group>
           
@@ -64,7 +64,7 @@
               <span>数据管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="3-1" @click="addTab(editableTabsValue)"
+              <el-menu-item index="3-1" @click="addTab('/fdjbrand')"
                 >发动机品牌</el-menu-item
               >
               <el-menu-item index="3-2" @click="addTab(editableTabsValue)"
