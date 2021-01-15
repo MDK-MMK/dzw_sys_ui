@@ -48,8 +48,8 @@
               <el-menu-item index="2-1" @click="addTab('/stars')"
                 >技工星级</el-menu-item
               >
-              <el-menu-item index="2-2" @click="addTab(editableTabsValue)"
-                >技工租车辆</el-menu-item
+              <el-menu-item index="2-2" @click="addTab('/workcar')"
+                >外勤车辆</el-menu-item
               >
               <el-menu-item index="2-3" @click="addTab('/team')"
                 >技工组</el-menu-item
@@ -124,13 +124,13 @@
               <span>维修管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="6-1" @click="addTab(editableTabsValue)"
+              <el-menu-item index="6-1" @click="addTab('/maintain')"
                 >竣工检验</el-menu-item
               >
               <el-menu-item index="6-2" @click="addTab(editableTabsValue)"
-                >完工结算</el-menu-item
-              >
-              <el-menu-item index="6-3" @click="addTab('/maintain')"
+                >完工结算</el-menu-item>
+
+              <el-menu-item index="6-3" @click="addTab('/Maintainzw')"
                 >维修开单</el-menu-item
               >
             </el-menu-item-group>
