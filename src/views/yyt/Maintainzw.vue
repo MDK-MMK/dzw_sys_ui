@@ -248,7 +248,7 @@
           </el-col>
         </el-form>
 
-        <!-- 保养项目 -->
+        <!-- 维修项目 -->
         <el-dialog
           title="维修项目"
           :visible.sync="dialogVisible1"
