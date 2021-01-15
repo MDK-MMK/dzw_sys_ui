@@ -3,10 +3,13 @@ import Router from 'vue-router'
 import login from '../views/Login.vue'
 import register from '../views/Register.vue'
 import home from '../views/Home.vue'
+import workcar from '../views/yyt/Workcar.vue'
 import stars from '../views/yyt/Stars'
 import zhiwei from '../views/ljh/ZhiWei.vue'
 import employee from '../views/ljh/Employee.vue'
 import team from '../views/yyt/Team.vue'
+import Maintainzw from '../views/yyt/Maintainzw.vue'
+
 
 Vue.use(Router)
 
@@ -24,7 +27,10 @@ export default new Router({
       {path: '/emp',name: 'emp',component: employee},
         //技工班组
       {path: '/team',name: 'team',component: team},
-      
+      //外勤车辆
+      {path: '/workcar',name: 'workcar',component: workcar},
+       //站外接车
+       {path: '/Maintainzw',name: 'Maintainzw',component: Maintainzw},
     ]},
     //注册
     {path: '/register',name: 'register',component: register},
