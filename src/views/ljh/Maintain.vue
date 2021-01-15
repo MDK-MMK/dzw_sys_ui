@@ -266,7 +266,7 @@
         <el-form-item>
           <p style="display: inline-block; margin-top:20px;">
             <el-tag type="danger">返工次数：{{fnum}}</el-tag>
-            <el-tag>预计总金额: {{ zongjine }}.0元</el-tag>
+            <el-tag v-if="wei.izt == 2">预计总金额: {{ zongjine }}.0元</el-tag>
           </p>
           <el-button style="" @click="subfrom()">确定</el-button>
           <el-button style="" @click="xiuTable=false">取消</el-button>
@@ -623,12 +623,12 @@ export default {
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
       this.size = val;
-      this.selectAlls(this.size, this.currentPage);
+      this.selectAll(this.size, this.currentPage);
     },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
       this.currentPage = val;
-      this.selectAlls(this.size, this.currentPage);
+      this.selectAll(this.size, this.currentPage);
     },
     updateMaintain(inid) {
       let that = this;

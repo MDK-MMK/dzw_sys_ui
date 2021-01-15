@@ -14,6 +14,9 @@ import fdjbrand from '../views/tzy/fdjbrand.vue'
 import gyssupplier from '../views/tzy/gyssupplier.vue'
 import weixiuitems from '../views/tzy/weixiuitems.vue'
 import Maintainzw from '../views/yyt/Maintainzw.vue'
+import customer from '../views/lt/customer.vue'
+import vehicle from '../views/lt/vehicle.vue'
+import shouye from '../views/lt/shouye.vue'
 
 
 
@@ -22,37 +25,44 @@ Vue.use(Router)
 export default new Router({
   routes: [
     //登录
-    {path: '/',name: 'login',component: login},
+    { path: '/aa', name: 'login', component: login },
     //主页面
-    {path: '/home',name: 'home',component: home,children:[
-       //技工星级
-      {path: '/stars',name: 'stars',component: stars},
-       //岗位定义
-       {path: '/zhiwei',name: 'zhiwei',component: zhiwei},
-       //组织机构
-      {path: '/emp',name: 'emp',component: employee},
-      //组织机构
-      {path: '/lea',name: 'lea',component: leave},
+    {
+      path: '/home', name: 'home', component: home, children: [
+        //技工星级
+        { path: '/stars', name: 'stars', component: stars },
+        //岗位定义
+        { path: '/zhiwei', name: 'zhiwei', component: zhiwei },
+        //组织机构
+        { path: '/emp', name: 'emp', component: employee },
+        //离职
+        { path: '/lea', name: 'lea', component: leave },
+        //首页
+        { path: '/shouye', name: 'shouye', component: shouye },
         //技工班组
-      {path: '/team',name: 'team',component: team},
-
-      //组织机构
-      {path: '/maintain',name: 'maintain',component: maintain},
-       //发动机品牌
-      {path: '/fdjbrand',name: 'fdjbrand',component: fdjbrand},
-       //供应商管理
-      {path: '/gyssupplier',name: 'gyssupplier',component: gyssupplier},
-       //维修项目管理
-       {path: '/weixiuitems',name: 'weixiuitems',component: weixiuitems},
+        { path: '/team', name: 'team', component: team },
+        //客户信息
+        { path: '/customer', name: 'customer', component: customer },
+        //用户车辆
+        { path: '/vehicle', name: 'vehicle', component: vehicle },
+        //组织机构
+        { path: '/maintain', name: 'maintain', component: maintain },
+        //发动机品牌
+        { path: '/fdjbrand', name: 'fdjbrand', component: fdjbrand },
+        //供应商管理
+        { path: '/gyssupplier', name: 'gyssupplier', component: gyssupplier },
+        //维修项目管理
+        { path: '/weixiuitems', name: 'weixiuitems', component: weixiuitems },
+        //注册
+        { path: '/register', name: 'register', component: register },
+        //外勤车辆
+        { path: '/workcar', name: 'workcar', component: workcar },
+        //站外接车
+        { path: '/Maintainzw', name: 'Maintainzw', component: Maintainzw },
+      ]
+    },
     //注册
-    {path: '/register',name: 'register',component: register},
-      //外勤车辆
-      {path: '/workcar',name: 'workcar',component: workcar},
-       //站外接车
-       {path: '/Maintainzw',name: 'Maintainzw',component: Maintainzw},
-    ]},
-    //注册
-    {path: '/register',name: 'register',component: register},
+    { path: '/register', name: 'register', component: register },
 
   ]
 })

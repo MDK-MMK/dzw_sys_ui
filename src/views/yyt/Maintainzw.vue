@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="12">
+  <el-row style="height:668px;" :gutter="12">
     <el-col :span="24">
       <el-card shadow="always">
         <el-divider content-position="left">
@@ -513,6 +513,7 @@ export default {
                         message: "添加成功",
                         type: "success",
                       });
+                      that.$router.push('/maintain');
                     } else {
                       that.$message.error("添加失败！");
                     }
@@ -528,7 +529,7 @@ export default {
 
             this.inststion.inid = parseInt(this.inststion.inid);
             this.inststion.izt = 0;
-            this.inststion.jdate = "";
+            this.inststion.jdate = new Date();
             var a = [];
             this.tableData.forEach((temp) => {
               a.push({
@@ -575,6 +576,7 @@ export default {
                         message: "添加成功",
                         type: "success",
                       });
+                      that.$router.push('/maintain');
                     } else {
                       that.$message.error("添加失败！");
                     }
