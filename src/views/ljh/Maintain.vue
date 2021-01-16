@@ -190,7 +190,7 @@
         </el-form-item>
 
         <el-form-item v-if="wei.izt == 2" label="班组" prop="tid">
-          <el-select v-model="wei.tid" style="width:100%;">
+          <el-select v-model="wei.tid" style="width: 100%">
             <el-option
               v-for="(item, i) in teamoptions"
               :key="i"
@@ -200,7 +200,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-
 
         <el-tabs type="border-card" v-if="wei.izt == 2">
           <el-tab-pane label="维修项目">
@@ -397,7 +396,7 @@ const axios = require("axios");
 export default {
   data() {
     return {
-      teamoptions:[],//班组
+      teamoptions: [], //班组
       //材料
       dialogVisible2: false, //维修材料
       tableDatacl: [], //维修材料
@@ -435,7 +434,7 @@ export default {
         inid: "",
         cno: "",
         izt: "4",
-        tid:"",
+        tid: "",
         fyuany: "",
       },
       size: 6,
@@ -444,7 +443,7 @@ export default {
       rules: {},
       up: {
         inid: "",
-        tid:"",
+        tid: "",
         izt: "0",
       },
       fnum: "0", //返工次数
@@ -454,7 +453,7 @@ export default {
     this.selectAll(6, 1);
     this.chaxunbaoyang(4, 1); //查询保养项目
     this.chaxuncailiao(1, 4); //查询材料
-    this.chaxunTeam()//查询班组
+    this.chaxunTeam(); //查询班组
   },
   methods: {
     //保养项目
@@ -555,15 +554,20 @@ export default {
       this.$nextTick(() => {
         this.$refs.dataTable.toggleRowSelection(row, false);
       });
+      
       this.jisuanjaig();
     },
     //保养项目确认
     byqr() {
       this.tableDataxm = this.bytable;
       this.dialogVisiblecl = false;
+      
       this.jisuanjaig();
       ////console.log(this.dialogVisi   blecl);
     },
+
+
+
     // 选中的保养项目
     handleSelectionChange(val) {
       this.bynum = val.length;
@@ -686,7 +690,7 @@ export default {
     updatefan() {
       let that = this;
       this.up.inid = this.wei.inid;
-      this.up.tid=this.wei.tid;
+      this.up.tid = this.wei.tid;
       this.up.izt = "2";
       axios.put("http://localhost:8080/dzw_sys/api/Wei/updatefan", this.up);
     },
@@ -752,19 +756,19 @@ export default {
         });
     },
     //查询班组
-    chaxunTeam() {
-      const axios = require("axios");
-      let that = this;
-      axios
-        .get("http://localhost:8080/dzw_sys/api/Teams/ByZt")
-        .then(function (res) {
-          ////console.log(res.data);
-          that.teamoptions= res.data;
-          if (res.data.length != 0) {
-            that.wei.tid= res.data[0].tid;//默认选择第一个班组
-          }
-        });
-    },
+    chaxunTeam() {
+      const axios = require("axios");
+      let that = this;
+      axios
+        .get("http://localhost:8080/dzw_sys/api/Teams/ByZt")
+        .then(function (res) {
+          ////console.log(res.data);
+          that.teamoptions = res.data;
+          if (res.data.length != 0) {
+            that.wei.tid = res.data[0].tid; //默认选择第一个班组
+          }
+        });
+    },
     //新增维修详情，修改商品数量
     xiugaishop() {
       var a = [];
@@ -803,9 +807,9 @@ export default {
       axios.post("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update", b);
       this.$refs.dataTable.clearSelection();
       this.$refs.dataTable2.clearSelection();
-      this.tableDataxm=[];
-      this.tableDatacl=[];
-      this.zongjine=0.0;
+      this.tableDataxm = [];
+      this.tableDatacl = [];
+      this.zongjine = 0.0;
     },
   },
 };

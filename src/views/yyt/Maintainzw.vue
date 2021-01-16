@@ -235,7 +235,7 @@
           <el-col :span="24">
             <el-form-item style="margin-top: 2%; margin-right: -70%">
               <p style="display: inline-block; color: red">
-                预计总金额: {{ zongjine }}.0元
+                班组时工费用:{{ banzufy }}---预计总金额: {{ zongjine }}.0元
               </p>
               <el-button
                 :disabled="tijiao"
@@ -405,7 +405,7 @@ export default {
       xm: "", //客户姓名
       zongjine: 0,
       tijiao: false,
-      banzufyong:0,
+      banzufy: 0,
 
       //材料
       dialogVisible2: false, //维修材料
@@ -464,35 +464,40 @@ export default {
             });
             return;
           }
+           this.$set(this.tableData, 1, {
+                shopname: "班组费",
+                sellingprice: this.banzufy,
+                quantity: "1",
+              });
           let that = this;
           var a = [];
-            this.tableData.forEach((temp) => {
-              a.push({
-                xqid: 0,
-                inid: this.inststion.inid,
-                xqname: temp.shopname,
-                xqsl: temp.quantity,
-                spid: 1,
-                zt: temp.sellingprice,
-                xmoney: temp.sellingprice * temp.quantity,
-              });
+          this.tableData.forEach((temp) => {
+            a.push({
+              xqid: 0,
+              inid: this.inststion.inid,
+              xqname: temp.shopname,
+              xqsl: temp.quantity,
+              spid: 1,
+              zt: temp.sellingprice,
+              xmoney: temp.sellingprice * temp.quantity,
             });
-            var b = [];
-            this.tableData1.forEach((temp) => {
-              a.push({
-                xqid: 0,
-                inid: this.inststion.inid,
-                xqname: temp.shopname,
-                xqsl: temp.image,
-                spid: 2,
-                zt: temp.sellingprice,
-                xmoney: temp.sellingprice * temp.image,
-              });
-              b.push({
-                shopid: temp.shopid,
-                quantity: temp.quantity - temp.image,
-              });
+          });
+          var b = [];
+          this.tableData1.forEach((temp) => {
+            a.push({
+              xqid: 0,
+              inid: this.inststion.inid,
+              xqname: temp.shopname,
+              xqsl: temp.image,
+              spid: 2,
+              zt: temp.sellingprice,
+              xmoney: temp.sellingprice * temp.image,
             });
+            b.push({
+              shopid: temp.shopid,
+              quantity: temp.quantity - temp.image,
+            });
+          });
           if (this.radio == "站外维修") {
             this.inststion.inid = parseInt(this.inststion.inid);
             this.inststion.izt = 1;
@@ -530,7 +535,7 @@ export default {
             this.inststion.inid = parseInt(this.inststion.inid);
             this.inststion.izt = 0;
             this.inststion.jdate = new Date();
-            
+
             //console.log(b);
             //console.log(a);
             axios
@@ -568,17 +573,19 @@ export default {
     },
     //计算总金额
     jisuanjaig() {
-      console.log(11111);
-      for (let index = 0; index < this.tableData.length; index++) {
-        if(this.tableData[index].shopname=='班组费'&&this.tableData.length!=2){
-          this.tableData[index].sellingprice=this.banzufyong;
-          this.$set(this.tableData,index,{
-            shopid:this.tableData[index].shopid,
-            shopname:this.tableData[index].shopname,
-            sellingprice:(this.tableData[index].sellingprice*(this.tableData.length-2)),
-            quantity:1
-          })
-          return;
+      if (this.radio == "站外维修") {
+        if (this.tableData.length > 2) {
+          this.banzufy =
+            this.tableData[1].sellingprice * (this.tableData.length - 2);
+        } else {
+          this.banzufy = this.tableData[1].sellingprice;
+        }
+      } else {
+        if (this.tableData.length > 1) {
+          this.banzufy =
+            this.tableData[0].sellingprice * (this.tableData.length - 1);
+        } else {
+          this.banzufy = this.tableData[0].sellingprice;
         }
       }
       var xm = 0;
@@ -663,6 +670,7 @@ export default {
             });
         }
       });
+      this.jisuanjaig();
     },
     //切换站内站外
     zw() {
@@ -681,7 +689,7 @@ export default {
           axios
             .get("http://127.0.0.1:8080/dzw_sys/api/Starss/ByID/" + temp.sid)
             .then((res) => {
-              that.banzufyong=res.data.xmoney;
+              ////console.log(res.data);
               that.tableData.splice(0, 0, {
                 shopname: "班组费",
                 sellingprice: res.data.xmoney,
@@ -691,7 +699,7 @@ export default {
                 that.zw();
               }
 
-              //that.jisuanjaig();
+             // that.jisuanjaig();
             });
         }
       });
@@ -958,7 +966,7 @@ export default {
               });
             }
           });
-
+          that.jisuanjaig();
           setTimeout(function () {
             that.map.setViewport([myP1, myP3]); //调整到最佳视野
           }, 1000);
