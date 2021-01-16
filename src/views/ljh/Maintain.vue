@@ -818,6 +818,7 @@ export default {
       this.$refs.dataTable2.clearSelection();
       this.tableDataxm=[];
       this.tableDatacl=[];
+      this.zongjine=0.0;
     },
   },
 };
