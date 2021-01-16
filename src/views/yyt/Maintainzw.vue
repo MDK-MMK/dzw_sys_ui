@@ -890,7 +890,7 @@ export default {
           ////console.log(res.data);
           that.teamoptions = res.data;
           if (res.data.length != 0) {
-            that.inststion.tid = res.data[0].tid;
+            that.inststion.tid = res.data[0].tid;//默认选择第一个班组
             that.jg();
           } else {
             that.tijiao = true;
