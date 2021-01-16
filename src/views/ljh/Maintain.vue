@@ -92,7 +92,12 @@
             @click="updateMaintain(scope.row.inid)"
             >接车中</el-button
           >
-          <el-button type="danger" @click="upshow(scope.row)" v-if="scope.row.izt == 2">返工中</el-button>
+          <el-button
+            type="danger"
+            @click="upshow(scope.row)"
+            v-if="scope.row.izt == 2"
+            >返工中</el-button
+          >
           <el-button type="success" v-if="scope.row.izt == 3">已竣工</el-button>
         </template>
       </el-table-column>
@@ -275,14 +280,13 @@
           </el-tab-pane>
         </el-tabs>
 
-
         <el-form-item>
-          <p style="display: inline-block; margin-top:20px;">
-            <el-tag type="danger">返工次数：{{fnum}}</el-tag>
-            <el-tag>预计总金额: {{ zongjine }}.0元</el-tag>
+          <p style="display: inline-block; margin-top: 20px">
+            <el-tag type="danger">返工次数：{{ fnum }}</el-tag>
+            <el-tag v-if="wei.izt == 2">预计总金额: {{ zongjine }}.0元</el-tag>
           </p>
           <el-button style="" @click="subfrom()">确定</el-button>
-          <el-button style="" @click="xiuTable=false">取消</el-button>
+          <el-button style="" @click="xiuTable = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -443,7 +447,7 @@ export default {
         tid:"",
         izt: "0",
       },
-      fnum:"0",//返工次数
+      fnum: "0", //返工次数
     };
   },
   created() {
@@ -465,7 +469,7 @@ export default {
         )
         .then(function (res) {
           that.bytableData = res.data.list;
-          // console.log(res.data.list);
+          // //console.log(res.data.list);
           that.total1 = res.data.total;
         });
     },
@@ -481,7 +485,7 @@ export default {
         )
         .then(function (res) {
           that.cltableData = res.data.list;
-          // console.log(res.data.list);
+          // //console.log(res.data.list);
           that.total2 = res.data.total;
         });
     },
@@ -492,9 +496,9 @@ export default {
     },
     //移除材料
     clyc(row, index) {
-      //  console.log(index);
+      //  //console.log(index);
       this.tableDatacl.splice(index, 1);
-      // console.log(this.tableData);
+      // //console.log(this.tableData);
       //this.bytable.splice(index,1);
       this.$nextTick(() => {
         this.$refs.dataTable2.toggleRowSelection(row, false);
@@ -523,18 +527,18 @@ export default {
         )
         .then(function (res) {
           that.cltableData = res.data.list;
-          // console.log(res.data.list);
+          // //console.log(res.data.list);
           that.total2 = res.data.total;
         });
     },
     //分页  材料
     handleSizeChange2(val) {
-      // console.log(`每页 ${val} 条`);
+      // //console.log(`每页 ${val} 条`);
       this.size2 = val;
       this.chaxuncailiao(this.currentPage2, this.size2);
     },
     handleCurrentChange2(val) {
-      // console.log(`当前页: ${val}`);
+      // //console.log(`当前页: ${val}`);
       this.currentPage2 = val;
       this.chaxuncailiao(this.currentPage2, this.size2);
     },
@@ -544,9 +548,9 @@ export default {
     },
     //保养移除
     byyc(index, row) {
-      //console.log(index);
+      ////console.log(index);
       this.tableDataxm.splice(index, 1);
-      //console.log(this.tableData);
+      ////console.log(this.tableData);
       //this.bytable.splice(index,1);
       this.$nextTick(() => {
         this.$refs.dataTable.toggleRowSelection(row, false);
@@ -558,7 +562,7 @@ export default {
       this.tableDataxm = this.bytable;
       this.dialogVisiblecl = false;
       this.jisuanjaig();
-      //console.log(this.dialogVisi   blecl);
+      ////console.log(this.dialogVisi   blecl);
     },
     // 选中的保养项目
     handleSelectionChange(val) {
@@ -567,12 +571,12 @@ export default {
     },
     //分页  保养
     handleSizeChange1(val) {
-      // console.log(`每页 ${val} 条`);
+      // //console.log(`每页 ${val} 条`);
       this.size1 = val;
       this.chaxunbaoyang(this.size1, this.currentPage1);
     },
     handleCurrentChange1(val) {
-      // console.log(`当前页: ${val}`);
+      // //console.log(`当前页: ${val}`);
       this.currentPage1 = val;
       this.chaxunbaoyang(this.size1, this.currentPage1);
     },
@@ -581,19 +585,19 @@ export default {
       var xm = 0;
       this.tableDataxm.forEach((temp) => {
         xm += temp.sellingprice;
-        //console.log(temp.sellingprice);
+        ////console.log(temp.sellingprice);
       });
-      console.log(xm);
+      //console.log(xm);
       var cl = 0;
       this.tableDatacl.forEach((temp) => {
-        console.log(temp.image);
+        //console.log(temp.image);
         if (temp.image == "") {
           cl += temp.sellingprice;
         } else {
           cl += temp.sellingprice * temp.image;
         }
       });
-      console.log(cl);
+      //console.log(cl);
       this.zongjine = cl + xm;
     },
     //分页查询维修单号
@@ -601,9 +605,15 @@ export default {
       let that = this;
       console.info(this.Inststion);
       axios
-        .post("http://localhost:8080/dzw_sys/api/Wei/all/" +size +"/" +currentPage,this.Inststion)
+        .post(
+          "http://localhost:8080/dzw_sys/api/Wei/all/" +
+            size +
+            "/" +
+            currentPage,
+          this.Inststion
+        )
         .then(function (res) {
-          console.log(res.data);
+          //console.log(res.data);
           that.tableData = res.data.list;
           that.total = res.data.total;
         });
@@ -617,33 +627,40 @@ export default {
     },
     //查看费用
     setshowTable(row) {
-      console.log(row);
+      ////console.log(row);
       this.showTable = [];
       this.showTabletwo = [];
       row.forEach((element) => {
-        this.showTable.push(element);
-        this.showTabletwo.push(element);
+        if (element.spid == 1) {
+          this.showTable.push(element);
+        } else {
+          this.showTabletwo.push(element);
+        }
+        // this.showTable.push(element);
+        // this.showTabletwo.push(element);
       });
-      for (let index = 0; index < this.showTable.length; index++) {
-        if (this.showTable[index].spid == 1) {
-          this.showTable.splice(index, 1);
-        }
-      }
-      for (let index = 0; index < this.showTabletwo.length; index++) {
-        if (this.showTabletwo[index].spid == 2) {
-          this.showTabletwo.splice(index, 1);
-        }
-      }
+      // for (let index = 0; index < this.showTable.length; index++) {
+      //   if (this.showTable[index].spid == 1) {
+      //     //console.log(this.showTable[index]);
+      //     this.showTable.splice(index, 1);
+      //   }
+      // }
+      // //console.log(this.showTable);
+      // for (let index = 0; index < this.showTabletwo.length; index++) {
+      //   if (this.showTabletwo[index].spid == 2) {
+      //     this.showTabletwo.splice(index, 1);
+      //   }
+      // }
       this.moneyTable = true;
     },
     //分页
     handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`);
+      // //console.log(`每页 ${val} 条`);
       this.size = val;
       this.selectAll(this.size, this.currentPage);
     },
     handleCurrentChange(val) {
-      // console.log(`当前页: ${val}`);
+      // //console.log(`当前页: ${val}`);
       this.currentPage = val;
       this.selectAll(this.size, this.currentPage);
     },
@@ -651,7 +668,8 @@ export default {
       let that = this;
       this.up.inid = inid;
       this.up.izt = "0";
-      axios.put("http://localhost:8080/dzw_sys/api/Wei/update", this.up)
+      axios
+        .put("http://localhost:8080/dzw_sys/api/Wei/update", this.up)
         .then(function (res) {
           if (res.data == 1) {
             that.$message({
@@ -670,16 +688,17 @@ export default {
       this.up.inid = this.wei.inid;
       this.up.tid=this.wei.tid;
       this.up.izt = "2";
-      axios.put("http://localhost:8080/dzw_sys/api/Wei/updatefan", this.up)
+      axios.put("http://localhost:8080/dzw_sys/api/Wei/updatefan", this.up);
     },
     //提交维修或竣工
     subfrom() {
       let that = this;
-      console.log(this.wei);
+      //console.log(this.wei);
       if (that.wei.izt == 3) {
         this.up.izt = "3";
         this.up.inid = this.wei.inid;
-        axios.put("http://localhost:8080/dzw_sys/api/Wei/updatejun", this.up)
+        axios
+          .put("http://localhost:8080/dzw_sys/api/Wei/updatejun", this.up)
           .then(function (res) {
             if (res.data == 1) {
               that.$message({
@@ -695,13 +714,15 @@ export default {
       } else {
         this.fan();
         this.updatefan();
+        this.xiugaishop();
         this.xiuTable = false;
       }
     },
     //新增返工
-    fan(){
+    fan() {
       let that = this;
-      axios.post("http://localhost:8080/dzw_sys/api/Fan/fan", this.wei)
+      axios
+        .post("http://localhost:8080/dzw_sys/api/Fan/fan", this.wei)
         .then(function (res) {
           if (res.data == 1) {
             that.$message({
@@ -725,7 +746,7 @@ export default {
     selectfnum() {
       let that = this;
       axios
-        .post("http://localhost:8080/dzw_sys/api/Fan/all/"+that.wei.inid)
+        .post("http://localhost:8080/dzw_sys/api/Fan/all/" + that.wei.inid)
         .then(function (res) {
           that.fnum = res.data;
         });
@@ -744,6 +765,47 @@ export default {
           }
         });
     },
+    //新增维修详情，修改商品数量
+    xiugaishop() {
+      var a = [];
+      this.tableDataxm.forEach((temp) => {
+        a.push({
+          xqid: 0,
+          inid: this.wei.inid,
+          xqname: temp.shopname,
+          xqsl: temp.quantity,
+          spid: 1,
+          zt: temp.sellingprice,
+          xmoney: temp.sellingprice * temp.quantity,
+        });
+      });
+      var b = [];
+      this.tableDatacl.forEach((temp) => {
+        a.push({
+          xqid: 0,
+          inid: this.wei.inid,
+          xqname: temp.shopname,
+          xqsl: temp.image,
+          spid: 2,
+          zt: temp.sellingprice,
+          xmoney: temp.sellingprice * temp.image,
+        });
+        b.push({
+          shopid: temp.shopid,
+          quantity: temp.quantity - temp.image,
+        });
+      });
+      //console.log(b);
+      //console.log(a);
+      //新增维修详情
+      axios.post("http://127.0.0.1:8080/dzw_sys/api/Wxxqs/insert", a);
+      //修改商品数量
+      axios.post("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update", b);
+      this.$refs.dataTable.clearSelection();
+      this.$refs.dataTable2.clearSelection();
+      this.tableDataxm=[];
+      this.tableDatacl=[];
+    },
   },
 };
 </script>
