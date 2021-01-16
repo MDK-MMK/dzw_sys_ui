@@ -184,6 +184,19 @@
           <el-input v-model="wei.fyuany"></el-input>
         </el-form-item>
 
+        <el-form-item v-if="wei.izt == 2" label="班组" prop="tid">
+          <el-select v-model="wei.tid" style="width:100%;">
+            <el-option
+              v-for="(item, i) in teamoptions"
+              :key="i"
+              :label="item.tname"
+              :value="item.tid"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+
         <el-tabs type="border-card" v-if="wei.izt == 2">
           <el-tab-pane label="维修项目">
             <el-table :data="tableDataxm" style="width: 100%">
@@ -380,6 +393,7 @@ const axios = require("axios");
 export default {
   data() {
     return {
+      teamoptions:[],//班组
       //材料
       dialogVisible2: false, //维修材料
       tableDatacl: [], //维修材料
@@ -417,6 +431,7 @@ export default {
         inid: "",
         cno: "",
         izt: "4",
+        tid:"",
         fyuany: "",
       },
       size: 6,
@@ -425,6 +440,7 @@ export default {
       rules: {},
       up: {
         inid: "",
+        tid:"",
         izt: "0",
       },
       fnum:"0",//返工次数
@@ -434,6 +450,7 @@ export default {
     this.selectAll(6, 1);
     this.chaxunbaoyang(4, 1); //查询保养项目
     this.chaxuncailiao(1, 4); //查询材料
+    this.chaxunTeam()//查询班组
   },
   methods: {
     //保养项目
@@ -623,12 +640,12 @@ export default {
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
       this.size = val;
-      this.selectAlls(this.size, this.currentPage);
+      this.selectAll(this.size, this.currentPage);
     },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
       this.currentPage = val;
-      this.selectAlls(this.size, this.currentPage);
+      this.selectAll(this.size, this.currentPage);
     },
     updateMaintain(inid) {
       let that = this;
@@ -651,6 +668,7 @@ export default {
     updatefan() {
       let that = this;
       this.up.inid = this.wei.inid;
+      this.up.tid=this.wei.tid;
       this.up.izt = "2";
       axios.put("http://localhost:8080/dzw_sys/api/Wei/updatefan", this.up)
     },
@@ -712,6 +730,20 @@ export default {
           that.fnum = res.data;
         });
     },
+    //查询班组
+    chaxunTeam() {
+      const axios = require("axios");
+      let that = this;
+      axios
+        .get("http://localhost:8080/dzw_sys/api/Teams/ByZt")
+        .then(function (res) {
+          ////console.log(res.data);
+          that.teamoptions= res.data;
+          if (res.data.length != 0) {
+            that.wei.tid= res.data[0].tid;//默认选择第一个班组
+          }
+        });
+    },
   },
 };
 </script>
