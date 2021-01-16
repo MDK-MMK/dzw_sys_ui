@@ -19,7 +19,6 @@ import vehicle from '../views/lt/vehicle.vue'
 import shouye from '../views/lt/shouye.vue'
 
 
-
 Vue.use(Router)
 
 export default new Router({
@@ -28,7 +27,7 @@ export default new Router({
     { path: '/aa', name: 'login', component: login },
     //主页面
     {
-      path: '/home', name: 'home', component: home, children: [
+      path: '/', name: 'home', component: home, children: [
         //技工星级
         { path: '/stars', name: 'stars', component: stars },
         //岗位定义
@@ -38,7 +37,7 @@ export default new Router({
         //离职
         { path: '/lea', name: 'lea', component: leave },
         //首页
-        { path: '/shouye', name: 'shouye', component: shouye },
+        { path: '/', name: 'shouye', component: shouye },
         //技工班组
         { path: '/team', name: 'team', component: team },
         //客户信息

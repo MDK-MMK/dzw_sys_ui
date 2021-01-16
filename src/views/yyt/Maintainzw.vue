@@ -495,19 +495,19 @@ export default {
                 quantity: temp.quantity - temp.image,
               });
             });
-            console.log(b);
-            console.log(a);
+            //console.log(b);
+            //console.log(a);
             axios
               .post(
                 "http://127.0.0.1:8080/dzw_sys/api/Wei/insert",
                 this.inststion
               )
               .then((res) => {
-                //console.log(res.data);
+                ////console.log(res.data);
                 axios
                   .post("http://127.0.0.1:8080/dzw_sys/api/Wxxqs/insert", a)
                   .then((resp) => {
-                    //console.log(resp.data);
+                    ////console.log(resp.data);
                     if (resp.data != 0 && res.data != 0) {
                       that.$message({
                         message: "添加成功",
@@ -521,7 +521,7 @@ export default {
                 axios
                   .post("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update", b)
                   .then((ress) => {
-                    //console.log(ress.data);
+                    ////console.log(ress.data);
                   });
               });
           } else {
@@ -558,19 +558,19 @@ export default {
                 quantity: temp.quantity - temp.image,
               });
             });
-            console.log(b);
-            console.log(a);
+            //console.log(b);
+            //console.log(a);
             axios
               .post(
                 "http://127.0.0.1:8080/dzw_sys/api/Wei/insert",
                 this.inststion
               )
               .then((res) => {
-                //console.log(res.data);
+                ////console.log(res.data);
                 axios
                   .post("http://127.0.0.1:8080/dzw_sys/api/Wxxqs/insert", a)
                   .then((resp) => {
-                    //console.log(resp.data);
+                    ////console.log(resp.data);
                     if (resp.data != 0 && res.data != 0) {
                       that.$message({
                         message: "添加成功",
@@ -584,12 +584,12 @@ export default {
                 axios
                   .post("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update", b)
                   .then((ress) => {
-                    //console.log(ress.data);
+                    ////console.log(ress.data);
                   });
               });
           }
         } else {
-          console.log("error submit!!");
+          //console.log("error submit!!");
           return false;
         }
       });
@@ -599,21 +599,21 @@ export default {
       var xm = 0;
       this.tableData.forEach((temp) => {
         xm += temp.sellingprice;
-        //console.log(temp.sellingprice);
+        ////console.log(temp.sellingprice);
       });
-      //console.log(xm);
+      ////console.log(xm);
       var cl = 0;
       this.tableData1.forEach((temp) => {
         cl += temp.sellingprice * temp.image;
       });
-      //console.log(cl);
+      ////console.log(cl);
       this.zongjine = cl + xm;
     },
     //切换救援车辆
     chaxunjiuyxg() {
       this.workcaroptions.forEach((temp) => {
         if (temp.wid == this.inststion.wid) {
-          //console.log(temp);
+          ////console.log(temp);
           var a = 0;
           if (this.inststion.lc != 0) {
             if (this.inststion.lc > 10) {
@@ -637,7 +637,7 @@ export default {
     chaxunjiuy() {
       this.workcaroptions.forEach((temp) => {
         if (temp.wid == this.inststion.wid) {
-          //console.log(temp);
+          ////console.log(temp);
           var a = 0;
           if (this.inststion.lc != 0) {
             if (this.inststion.lc > 10) {
@@ -664,7 +664,7 @@ export default {
           axios
             .get("http://127.0.0.1:8080/dzw_sys/api/Starss/ByID/" + temp.sid)
             .then((res) => {
-              console.log(res.data);
+              //console.log(res.data);
               for (var i = 0; i < that.tableData.length; i++) {
                 if (that.tableData[i].shopname == "班组费") {
                   that.$set(that.tableData, i, {
@@ -697,7 +697,7 @@ export default {
           axios
             .get("http://127.0.0.1:8080/dzw_sys/api/Starss/ByID/" + temp.sid)
             .then((res) => {
-              //console.log(res.data);
+              ////console.log(res.data);
               that.tableData.splice(0, 0, {
                 shopname: "班组费",
                 sellingprice: res.data.xmoney,
@@ -718,9 +718,9 @@ export default {
     },
     //移除材料
     clyc(row, index) {
-      //  console.log(index);
+      //  //console.log(index);
       this.tableData1.splice(index, 1);
-      // console.log(this.tableData);
+      // //console.log(this.tableData);
       //this.bytable.splice(index,1);
       this.$nextTick(() => {
         this.$refs.dataTable2.toggleRowSelection(row, false);
@@ -749,18 +749,18 @@ export default {
         )
         .then(function (res) {
           that.cltableData = res.data.list;
-          // console.log(res.data.list);
+          // //console.log(res.data.list);
           that.total2 = res.data.total;
         });
     },
     //分页  材料
     handleSizeChange2(val) {
-      // console.log(`每页 ${val} 条`);
+      // //console.log(`每页 ${val} 条`);
       this.size2 = val;
       this.chaxuncailiao(this.currentPage2, this.size2);
     },
     handleCurrentChange2(val) {
-      // console.log(`当前页: ${val}`);
+      // //console.log(`当前页: ${val}`);
       this.currentPage2 = val;
       this.chaxuncailiao(this.currentPage2, this.size2);
     },
@@ -770,9 +770,9 @@ export default {
     },
     //保养移除
     byyc(index, row) {
-      //console.log(index);
+      ////console.log(index);
       this.tableData.splice(index, 1);
-      //console.log(this.tableData);
+      ////console.log(this.tableData);
       //this.bytable.splice(index,1);
       this.$nextTick(() => {
         this.$refs.dataTable.toggleRowSelection(row, false);
@@ -793,12 +793,12 @@ export default {
     },
     //分页  保养
     handleSizeChange1(val) {
-      // console.log(`每页 ${val} 条`);
+      // //console.log(`每页 ${val} 条`);
       this.size1 = val;
       this.chaxunbaoyang(this.size1, this.currentPage1);
     },
     handleCurrentChange1(val) {
-      // console.log(`当前页: ${val}`);
+      // //console.log(`当前页: ${val}`);
       this.currentPage1 = val;
       this.chaxunbaoyang(this.size1, this.currentPage1);
     },
@@ -816,7 +816,7 @@ export default {
       axios
         .post("http://127.0.0.1:8080/dzw_sys/api/lt/clicar/" + xm)
         .then(function (res) {
-          // console.log(res.data);
+          // //console.log(res.data);
           that.caroptions = res.data;
           that.inststion.cno = res.data[0].cno;
         });
@@ -827,7 +827,7 @@ export default {
       axios
         .post("http://127.0.0.1:8080/dzw_sys/api/lt/cli/1/100/undefined")
         .then(function (res) {
-          //console.log(res.data.list);
+          ////console.log(res.data.list);
           that.clioptions = res.data.list;
           that.xm = res.data.list[0].cliphone;
           that.car(that.xm); //查询用户车辆
@@ -845,7 +845,7 @@ export default {
         )
         .then(function (res) {
           that.bytableData = res.data.list;
-          // console.log(res.data.list);
+          // //console.log(res.data.list);
           that.total1 = res.data.total;
         });
     },
@@ -857,7 +857,7 @@ export default {
           "http://127.0.0.1:8080/dzw_sys/api/tzy/shop/queryAA/" + 1 + "/" + 100
         )
         .then(function (res) {
-          //console.log(res.data.list);
+          ////console.log(res.data.list);
         });
     },
     //查询救援车辆
@@ -869,7 +869,7 @@ export default {
           this.workcar
         )
         .then(function (res) {
-          //console.log(res.data.list);
+          ////console.log(res.data.list);
           that.workcaroptions = res.data.list;
           if (res.data.list.length != 0) {
             that.inststion.wid = res.data.list[0].wid;
@@ -887,7 +887,7 @@ export default {
       axios
         .get("http://localhost:8080/dzw_sys/api/Teams/ByZt")
         .then(function (res) {
-          //console.log(res.data);
+          ////console.log(res.data);
           that.teamoptions = res.data;
           if (res.data.length != 0) {
             that.inststion.tid = res.data[0].tid;
@@ -930,7 +930,7 @@ export default {
       let that = this;
       this.localSearch.setSearchCompleteCallback(function (searchResult) {
         var poi = searchResult.getPoi(0);
-        //console.log(poi.point.lng+"----"+poi.point.lat);
+        ////console.log(poi.point.lng+"----"+poi.point.lat);
         var myP1 = new BMap.Point(113.115287, 27.909567); //起点
         var myP3 = new BMap.Point(poi.point.lng, poi.point.lat); //终点
         that.map.clearOverlays(); //清除地图上所有的覆盖物
@@ -953,7 +953,7 @@ export default {
           that.map.addOverlay(lab1);
           that.map.addOverlay(lab3);
           var a = BMapLib.GeoUtils.getDistance(myP1, myP3);
-          console.log("距离：" + a);
+          //console.log("距离：" + a);
           that.inststion.lc = (a / 1000).toFixed(0);
 
           that.workcaroptions.forEach((temp) => {

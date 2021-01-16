@@ -9,8 +9,8 @@
           text-color="#fff"
           active-text-color="#ffd04b">
           <el-menu-item style="font-size: 18px; padding: 0 30px">欢迎来到汽修管理系统</el-menu-item>
-          <el-menu-item @click="addTab('/shouye')"><i class="el-icon-message-solid"></i>首页</el-menu-item>
-          <el-menu-item @click="addTab('fda'),xiao(temp.fid)" v-for="(temp, i) in dajiedian" :key="i" >
+          <el-menu-item index="0" @click="addTab('/')"><i class="el-icon-message-solid"></i>首页</el-menu-item>
+          <el-menu-item :index="temp.fid+''" @click="addTab('fda'),xiao(temp.fid)" v-for="(temp, i) in dajiedian" :key="i" >
             <i class="el-icon-message-solid"></i>{{ temp.tblfunction.fname }}
           </el-menu-item>
           <el-menu-item index="10" style="float: right">
@@ -23,13 +23,14 @@
       </el-col>
       <el-col :span="3">
         <el-menu
+        :collapse="isCollapse"
           style="height:669px"
           class="el-menu-vertical-demo"
           background-color="#545c64"
           text-color="#fff"
           active-text-color="#ffd04b"
           v-if="sf">
-          <el-menu-item @click="yemian(temp.fcode)" :index="i" v-for="(temp, i) in xiaojd" :key="i" style="font-size: 16px">
+          <el-menu-item @click="yemian(temp.fcode)" :index="temp.fid+''" v-for="(temp, i) in xiaojd" :key="i" style="font-size: 16px">
             <i class="el-icon-s-promotion"></i>
             <span slot="title">{{ temp.fname }}</span>
           </el-menu-item>
@@ -65,33 +66,32 @@ export default {
     var pwd = sessionStorage.getItem("pwd");
     axios
       .get(
-        `http://127.0.0.1:8080/dzw_sys/api/lt/login/${12345678900}/${123456}`).then(function (res) {
+        `http://127.0.0.1:8080/dzw_sys/api/lt/login/${23456789000}/${123456}`).then(function (res) {
         console.info(res);
         that.name = res.data.ename;
         that.zid=res.data.zid;
         that.zhiwei = res.data.zwei.zname;
         that.dajiedian = res.data.tblperm;
       });
-   //this.$router.push("/shouye");
   },
   methods: {
     addTab(url) {
-      if(url=="/shouye"){
+      if(url=="/"){
         this.sf=false;
-        this.$router.push("/shouye");
+        this.$router.push("/");
       }else{
         this.sf=true;
       }
     },
     yemian(val){
-      //alert(val);
+      this.sf=false;
       this.$router.push(val);
     },
     //查询小节点
     xiao(val){
       let that = this;
       axios.post(`http://127.0.0.1:8080/dzw_sys/api/lt/login/xiao/${val}/${this.zid}`).then(function(res) {
-          console.info(res.data);
+          //console.info(res.data);
           that.xiaojd=res.data;
       });
     },
@@ -112,4 +112,7 @@ export default {
   margin-top: 0px;
   
 }
+ .horizontal-collapse-transition { 
+        transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out; 
+    } 
 </style>

@@ -295,7 +295,7 @@ export default {
             axios.post(`http://127.0.0.1:8080/dzw_sys/api/lt/clicar/inscar`,this.clicar).then(function(res) {
                 console.info(res);
                 if(res.data>0){
-                    alert(that.clicar.cliphone);
+                   // alert(that.clicar.cliphone);
                     that.selcar(that.clicar.cliphone);
                     that.qingkong();
                     that.inscar=false;
