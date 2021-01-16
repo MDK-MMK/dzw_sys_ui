@@ -190,7 +190,7 @@
         </el-form-item>
 
         <el-form-item v-if="wei.izt == 2" label="班组" prop="tid">
-          <el-select v-model="wei.tid" style="width:100%;">
+          <el-select v-model="wei.tid" style="width: 100%">
             <el-option
               v-for="(item, i) in teamoptions"
               :key="i"
@@ -200,7 +200,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-
 
         <el-tabs type="border-card" v-if="wei.izt == 2">
           <el-tab-pane label="维修项目">
@@ -397,7 +396,7 @@ const axios = require("axios");
 export default {
   data() {
     return {
-      teamoptions:[],//班组
+      teamoptions: [], //班组
       //材料
       dialogVisible2: false, //维修材料
       tableDatacl: [], //维修材料
@@ -435,7 +434,7 @@ export default {
         inid: "",
         cno: "",
         izt: "4",
-        tid:"",
+        tid: "",
         fyuany: "",
       },
       size: 6,
@@ -444,18 +443,18 @@ export default {
       rules: {},
       up: {
         inid: "",
-        tid:"",
+        tid: "",
         izt: "0",
       },
       fnum: "0", //返工次数
-      teambool:0,//判断是否修改班组信息
+      teambool: 0, //判断是否修改班组信息
     };
   },
   created() {
     this.selectAll(6, 1);
     this.chaxunbaoyang(4, 1); //查询保养项目
     this.chaxuncailiao(1, 4); //查询材料
-    this.chaxunTeam()//查询班组
+    this.chaxunTeam(); //查询班组
   },
   methods: {
     //保养项目
@@ -687,7 +686,7 @@ export default {
     updatefan() {
       let that = this;
       this.up.inid = this.wei.inid;
-      this.up.tid=this.wei.tid;
+      this.up.tid = this.wei.tid;
       this.up.izt = "2";
       axios.put("http://localhost:8080/dzw_sys/api/Wei/updatefan", this.up);
     },
@@ -713,9 +712,16 @@ export default {
           });
         this.xiuTable = false;
       } else {
-        if(this.teambool!=this.wei.tid){
-          this.upteam(this.teambool,0);
-          this.upteam(this.wei.tid,1);
+         if (this.tableDataxm.length == 0 && this.tableDatacl.length == 0) {
+        this.$message({
+          message: "请选择维修项目或者维修材料!",
+          type: "warning",
+        });
+        return;
+      }
+        if (this.teambool != this.wei.tid) {
+          this.upteam(this.teambool, 0);
+          this.upteam(this.wei.tid, 1);
         }
         this.fan();
         this.updatefan();
@@ -744,9 +750,9 @@ export default {
     upshow(row) {
       this.wei.inid = row.inid;
       this.wei.cno = row.car.cno;
-      this.wei.tid=row.team.tid;
-      this.teambool=row.team.tid;
-      var team={tid:row.team.tid,tname:row.team.tname};
+      this.wei.tid = row.team.tid;
+      this.teambool = row.team.tid;
+      var team = { tid: row.team.tid, tname: row.team.tname };
       this.teamoptions.push(team);
       this.selectfnum();
       this.xiuTable = true;
@@ -761,22 +767,22 @@ export default {
         });
     },
     //查询班组
-    chaxunTeam() {
-      const axios = require("axios");
-      let that = this;
-      axios
-        .get("http://localhost:8080/dzw_sys/api/Teams/ByZt")
-        .then(function (res) {
-          ////console.log(res.data);
-          that.teamoptions= res.data;
-        });
-    },
+    chaxunTeam() {
+      const axios = require("axios");
+      let that = this;
+      axios
+        .get("http://localhost:8080/dzw_sys/api/Teams/ByZt")
+        .then(function (res) {
+          ////console.log(res.data);
+          that.teamoptions = res.data;
+        });
+    },
     //修改班组状态
-    upteam(tid,status){
-      var teama={tid:0,tzhuant:0};
-      teama.tid=tid;
-      teama.tzhuant=status;
-      axios.put("http://localhost:8080/dzw_sys/api/Teams/update",teama)
+    upteam(tid, status) {
+      var teama = { tid: 0, tzhuant: 0 };
+      teama.tid = tid;
+      teama.tzhuant = status;
+      axios.put("http://localhost:8080/dzw_sys/api/Teams/update", teama);
     },
     //新增维修详情，修改商品数量
     xiugaishop() {
@@ -814,11 +820,15 @@ export default {
       axios.post("http://127.0.0.1:8080/dzw_sys/api/Wxxqs/insert", a);
       //修改商品数量
       axios.post("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update", b);
-      this.$refs.dataTable.clearSelection();
-      this.$refs.dataTable2.clearSelection();
-      this.tableDataxm=[];
-      this.tableDatacl=[];
-      this.zongjine=0.0;
+      if(this.tableDataxm.length!=0){
+        this.$refs.dataTable.clearSelection();
+      }
+      if(this.tableDatacl.length!=0){
+        this.$refs.dataTable2.clearSelection();
+      }
+      this.tableDataxm = [];
+      this.tableDatacl = [];
+      this.zongjine = 0.0;
     },
   },
 };
