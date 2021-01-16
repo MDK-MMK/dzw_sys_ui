@@ -448,6 +448,7 @@ export default {
         izt: "0",
       },
       fnum: "0", //返工次数
+      teambool:0,//判断是否修改班组信息
     };
   },
   created() {
@@ -712,6 +713,10 @@ export default {
           });
         this.xiuTable = false;
       } else {
+        if(this.teambool!=this.wei.tid){
+          this.upteam(this.teambool,0);
+          this.upteam(this.wei.tid,1);
+        }
         this.fan();
         this.updatefan();
         this.xiugaishop();
@@ -739,6 +744,10 @@ export default {
     upshow(row) {
       this.wei.inid = row.inid;
       this.wei.cno = row.car.cno;
+      this.wei.tid=row.team.tid;
+      this.teambool=row.team.tid;
+      var team={tid:row.team.tid,tname:row.team.tname};
+      this.teamoptions.push(team);
       this.selectfnum();
       this.xiuTable = true;
     },
@@ -760,11 +769,15 @@ export default {
         .then(function (res) {
           ////console.log(res.data);
           that.teamoptions= res.data;
-          if (res.data.length != 0) {
-            that.wei.tid= res.data[0].tid;//默认选择第一个班组
-          }
         });
     },
+    //修改班组状态
+    upteam(tid,status){
+      var teama={tid:0,tzhuant:0};
+      teama.tid=tid;
+      teama.tzhuant=status;
+      axios.put("http://localhost:8080/dzw_sys/api/Teams/update",teama)
+    },
     //新增维修详情，修改商品数量
     xiugaishop() {
       var a = [];
