@@ -447,6 +447,7 @@ export default {
         izt: "0",
       },
       fnum: "0", //返工次数
+      teambool: 0, //判断是否修改班组信息
     };
   },
   created() {
@@ -716,6 +717,17 @@ export default {
           });
         this.xiuTable = false;
       } else {
+         if (this.tableDataxm.length == 0 && this.tableDatacl.length == 0) {
+        this.$message({
+          message: "请选择维修项目或者维修材料!",
+          type: "warning",
+        });
+        return;
+      }
+        if (this.teambool != this.wei.tid) {
+          this.upteam(this.teambool, 0);
+          this.upteam(this.wei.tid, 1);
+        }
         this.fan();
         this.updatefan();
         this.xiugaishop();
@@ -743,6 +755,10 @@ export default {
     upshow(row) {
       this.wei.inid = row.inid;
       this.wei.cno = row.car.cno;
+      this.wei.tid = row.team.tid;
+      this.teambool = row.team.tid;
+      var team = { tid: row.team.tid, tname: row.team.tname };
+      this.teamoptions.push(team);
       this.selectfnum();
       this.xiuTable = true;
     },
@@ -764,10 +780,14 @@ export default {
         .then(function (res) {
           ////console.log(res.data);
           that.teamoptions = res.data;
-          if (res.data.length != 0) {
-            that.wei.tid = res.data[0].tid; //默认选择第一个班组
-          }
         });
+    },
+    //修改班组状态
+    upteam(tid, status) {
+      var teama = { tid: 0, tzhuant: 0 };
+      teama.tid = tid;
+      teama.tzhuant = status;
+      axios.put("http://localhost:8080/dzw_sys/api/Teams/update", teama);
     },
     //新增维修详情，修改商品数量
     xiugaishop() {
@@ -805,8 +825,14 @@ export default {
       axios.post("http://127.0.0.1:8080/dzw_sys/api/Wxxqs/insert", a);
       //修改商品数量
       axios.post("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update", b);
-      this.$refs.dataTable.clearSelection();
-      this.$refs.dataTable2.clearSelection();
+
+      if(this.tableDataxm.length!=0){
+        this.$refs.dataTable.clearSelection();
+      }
+      if(this.tableDatacl.length!=0){
+        this.$refs.dataTable2.clearSelection();
+      }
+
       this.tableDataxm = [];
       this.tableDatacl = [];
       this.zongjine = 0.0;
