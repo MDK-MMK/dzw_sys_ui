@@ -1,5 +1,5 @@
 <template>
-  <el-row style="height:668px;" :gutter="12">
+  <el-row style="height: 668px" :gutter="12">
     <el-col :span="24">
       <el-card shadow="always">
         <el-divider content-position="left">
@@ -405,6 +405,7 @@ export default {
       xm: "", //客户姓名
       zongjine: 0,
       tijiao: false,
+      banzufyong:0,
 
       //材料
       dialogVisible2: false, //维修材料
@@ -464,10 +465,7 @@ export default {
             return;
           }
           let that = this;
-          if (this.radio == "站外维修") {
-            this.inststion.inid = parseInt(this.inststion.inid);
-            this.inststion.izt = 1;
-            var a = [];
+          var a = [];
             this.tableData.forEach((temp) => {
               a.push({
                 xqid: 0,
@@ -495,6 +493,9 @@ export default {
                 quantity: temp.quantity - temp.image,
               });
             });
+          if (this.radio == "站外维修") {
+            this.inststion.inid = parseInt(this.inststion.inid);
+            this.inststion.izt = 1;
             //console.log(b);
             //console.log(a);
             axios
@@ -513,16 +514,15 @@ export default {
                         message: "添加成功",
                         type: "success",
                       });
-                      that.$router.push('/maintain');
+                      that.$router.push("/maintain");
                     } else {
                       that.$message.error("添加失败！");
                     }
                   });
-                axios
-                  .post("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update", b)
-                  .then((ress) => {
-                    ////console.log(ress.data);
-                  });
+                axios.post(
+                  "http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update",
+                  b
+                );
               });
           } else {
             //站内
@@ -530,34 +530,7 @@ export default {
             this.inststion.inid = parseInt(this.inststion.inid);
             this.inststion.izt = 0;
             this.inststion.jdate = new Date();
-            var a = [];
-            this.tableData.forEach((temp) => {
-              a.push({
-                xqid: 0,
-                inid: this.inststion.inid,
-                xqname: temp.shopname,
-                xqsl: temp.quantity,
-                spid: 1,
-                zt: temp.sellingprice,
-                xmoney: temp.sellingprice * temp.quantity,
-              });
-            });
-            var b = [];
-            this.tableData1.forEach((temp) => {
-              a.push({
-                xqid: 0,
-                inid: this.inststion.inid,
-                xqname: temp.shopname,
-                xqsl: temp.image,
-                spid: 2,
-                zt: temp.sellingprice,
-                xmoney: temp.sellingprice * temp.image,
-              });
-              b.push({
-                shopid: temp.shopid,
-                quantity: temp.quantity - temp.image,
-              });
-            });
+            
             //console.log(b);
             //console.log(a);
             axios
@@ -576,16 +549,15 @@ export default {
                         message: "添加成功",
                         type: "success",
                       });
-                      that.$router.push('/maintain');
+                      that.$router.push("/maintain");
                     } else {
                       that.$message.error("添加失败！");
                     }
                   });
-                axios
-                  .post("http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update", b)
-                  .then((ress) => {
-                    ////console.log(ress.data);
-                  });
+                axios.post(
+                  "http://127.0.0.1:8080/dzw_sys/api/tzy/shop/update",
+                  b
+                );
               });
           }
         } else {
@@ -596,6 +568,19 @@ export default {
     },
     //计算总金额
     jisuanjaig() {
+      console.log(11111);
+      for (let index = 0; index < this.tableData.length; index++) {
+        if(this.tableData[index].shopname=='班组费'&&this.tableData.length!=2){
+          this.tableData[index].sellingprice=this.banzufyong;
+          this.$set(this.tableData,index,{
+            shopid:this.tableData[index].shopid,
+            shopname:this.tableData[index].shopname,
+            sellingprice:(this.tableData[index].sellingprice*(this.tableData.length-2)),
+            quantity:1
+          })
+          return;
+        }
+      }
       var xm = 0;
       this.tableData.forEach((temp) => {
         xm += temp.sellingprice;
@@ -678,7 +663,6 @@ export default {
             });
         }
       });
-      this.jisuanjaig();
     },
     //切换站内站外
     zw() {
@@ -697,7 +681,7 @@ export default {
           axios
             .get("http://127.0.0.1:8080/dzw_sys/api/Starss/ByID/" + temp.sid)
             .then((res) => {
-              ////console.log(res.data);
+              that.banzufyong=res.data.xmoney;
               that.tableData.splice(0, 0, {
                 shopname: "班组费",
                 sellingprice: res.data.xmoney,
@@ -707,7 +691,7 @@ export default {
                 that.zw();
               }
 
-              that.jisuanjaig();
+              //that.jisuanjaig();
             });
         }
       });
@@ -890,7 +874,7 @@ export default {
           ////console.log(res.data);
           that.teamoptions = res.data;
           if (res.data.length != 0) {
-            that.inststion.tid = res.data[0].tid;//默认选择第一个班组
+            that.inststion.tid = res.data[0].tid; //默认选择第一个班组
             that.jg();
           } else {
             that.tijiao = true;
