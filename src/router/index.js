@@ -17,6 +17,10 @@ import Maintainzw from '../views/yyt/Maintainzw.vue'
 import customer from '../views/lt/customer.vue'
 import vehicle from '../views/lt/vehicle.vue'
 import shouye from '../views/lt/shouye.vue'
+import jurisdiction from '../views/lt/jurisdiction.vue'
+import as from '../views/ljy/as.vue'
+import ass from '../views/ljy/ass.vue'
+import a from '../views/ljy/a.vue'
 
 
 Vue.use(Router)
@@ -24,10 +28,10 @@ Vue.use(Router)
 export default new Router({
   routes: [
     //登录
-    { path: '/aa', name: 'login', component: login },
+    { path: '/', name: 'login', component: login },
     //主页面
     {
-      path: '/', name: 'home', component: home, children: [
+      path: '/home', name: 'home', component: home, children: [
         //技工星级
         { path: '/stars', name: 'stars', component: stars },
         //岗位定义
@@ -58,6 +62,11 @@ export default new Router({
         { path: '/workcar', name: 'workcar', component: workcar },
         //站外接车
         { path: '/Maintainzw', name: 'Maintainzw', component: Maintainzw },
+        //权限附加
+        { path: '/jurisdiction', name: 'jurisdiction', component: jurisdiction },
+        {path: '/as',name: 'as',component: as},
+        {path: '/ass',name: 'ass',component: ass},
+        {path: '/a',name: 'a',component: a},
       ]
     },
     //注册

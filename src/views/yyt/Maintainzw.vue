@@ -390,6 +390,7 @@ export default {
         iszn: 0, //是否站内
         lc: "", //里程数
         insevent: "", //维修备注
+        ifjs:1,
       },
       workcar: { caid: "", czt: "0" }, //救援车辆
       rules: {
